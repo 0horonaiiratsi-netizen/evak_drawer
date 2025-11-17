@@ -1,0 +1,21 @@
+{
+  "name": "Малювальник схем евакуації",
+  "short_name": "Схеми",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#1a1a1a",
+  "theme_color": "#252526",
+  "description": "Веб-додаток для створення схем евакуації.",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

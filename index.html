@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n-key="app.title">Малювальник схем евакуації</title>
+    <link rel="stylesheet" href="./index.css">
+    <link rel="stylesheet" href="./assets/icons.css">
+    <meta name="theme-color" content="#252526"/>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+    <div id="workspace-selection-modal"></div>
+    <div id="symbol-palette" data-i18n-aria-label="symbolPalette.title"></div>
+    <div id="topo-symbol-palette" data-i18n-aria-label="symbolPalette.topoTitle"></div>
+    <div id="primary-toolbar" role="toolbar" aria-label="Основна панель інструментів"></div>
+    <div id="sketch-toolbar" class="secondary-toolbar" role="toolbar" aria-label="Панель інструментів ескізу"></div>
+    <div id="block-editor-toolbar" class="secondary-toolbar" role="toolbar" aria-label="Панель інструментів редактора блоків"></div>
+    <div id="drawing-toolbar" class="secondary-toolbar" role="toolbar" aria-label="Панель інструментів креслення"></div>
+    <div id="modification-toolbar" class="secondary-toolbar" role="toolbar" aria-label="Панель інструментів модифікації"></div>
+    <div id="annotations-toolbar" class="secondary-toolbar" role="toolbar" data-i18n-aria-label="toolbar.annotations.title"></div>
+    <div id="precision-toolbar" class="secondary-toolbar" role="toolbar" aria-label="Панель інструментів точності"></div>
+    <div id="object-snap-toolbar" class="secondary-toolbar" role="toolbar" aria-label="Панель об'єктних прив'язок"></div>
+    <div id="file-toolbar" class="secondary-toolbar" role="toolbar" aria-label="Панель інструментів для файлів та AI"></div>
+    <div id="stairs-tool-options" role="toolbar" aria-label="Типи сходів"></div>
+    <div id="window-container"></div>
+    <div id="modal-backdrop" class="hidden"></div>
+
+    <canvas id="app-canvas" aria-label="Робоча область для створення схем евакуації"></canvas>
+    <canvas id="3d-canvas"></canvas>
+    
+    <div id="status-bar" role="status" aria-live="polite"></div>
+    <div id="command-line" role="dialog" aria-label="Командний рядок"></div>
+
+    <div id="tooltip" role="tooltip" aria-hidden="true"></div>
+    <div id="coord-input" class="coord-input-box hidden" role="dialog" aria-label="Введення координат">
+        <label for="coord-input-length" data-i18n-key="coordInput.length"></label>
+        <input type="text" id="coord-input-length">
+    </div>
+
+    <div id="grip-context-menu" class="hidden"></div>
+
+    <input type="file" id="pdf-loader" style="display: none;" accept=".pdf">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsts/2.9.0/jsts.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cassowary/0.8.2/cassowary.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/csg.js/1.0.1/csg.min.js" defer></script>
+    <script type="module" src="./index.tsx" defer></script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>

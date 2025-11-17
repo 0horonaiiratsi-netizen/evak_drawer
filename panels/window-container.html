@@ -1,0 +1,233 @@
+<div id="layers-window" class="window-wrapper hidden" style="left: 20px; top: 100px; width: 220px; height: 350px;">
+    <div class="window-title-bar">
+        <div class="window-icon"><div class="icon icon-layers"></div></div>
+        <span class="window-title" data-i18n-key="layers.window.title"></span>
+        <div class="window-controls">
+            <button class="window-control-button close-button" data-i18n-aria-label="window.close">
+                <div class="icon icon-close"></div>
+            </button>
+        </div>
+    </div>
+    <div class="window-content">
+        <div id="layers-panel" aria-labelledby="layers-title">
+            <h3 id="layers-title" data-i18n-key="layers.panel.title"></h3>
+            <ul id="layers-list"></ul>
+            <div id="layers-controls">
+                <button id="add-layer-button" data-i18n-tooltip="layers.controls.add">
+                    <div class="icon icon-add"></div>
+                </button>
+                <button id="delete-layer-button" data-i18n-tooltip="layers.controls.delete">
+                    <div class="icon icon-delete"></div>
+                </button>
+                <button id="move-layer-up-button" data-i18n-tooltip="layers.controls.moveUp">
+                    <div class="icon icon-move-up"></div>
+                </button>
+                <button id="move-layer-down-button" data-i18n-tooltip="layers.controls.moveDown">
+                    <div class="icon icon-move-down"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="properties-window" class="window-wrapper hidden" style="top: 100px; left: calc(100vw - 280px); width: 260px;">
+     <div class="window-title-bar">
+        <div class="window-icon"><div class="icon icon-properties"></div></div>
+        <span class="window-title" data-i18n-key="properties.window.title"></span>
+        <div class="window-controls">
+            <button class="window-control-button close-button" data-i18n-aria-label="window.close">
+                <div class="icon icon-close"></div>
+            </button>
+        </div>
+    </div>
+    <div class="window-content">
+        <div id="properties-panel" aria-labelledby="properties-title">
+            <h3 id="properties-title" data-i18n-key="properties.panel.title"></h3>
+            <div id="multiple-selection-info" style="display: none;">
+                <span id="multiple-selection-text" data-i18n-key="properties.multipleSelection"></span>
+                <div id="selection-management-section">
+                    <label data-i18n-key="properties.selectionManagement"></label>
+                    <button id="select-same-layer-button" class="selection-button" data-i18n-key="properties.selectSameLayer" data-i18n-tooltip="properties.selectSameLayer.tooltip"></button>
+                </div>
+            </div>
+            <table class="properties-table">
+                <tbody>
+                    <tr data-property-row="geometry"><td data-i18n-key="properties.labels.x"></td><td><input type="number" id="object-x" readonly></td></tr>
+                    <tr data-property-row="geometry"><td data-i18n-key="properties.labels.y"></td><td><input type="number" id="object-y" readonly></td></tr>
+                    <tr data-property-row="geometry"><td data-i18n-key="properties.labels.width"></td><td><input type="number" id="object-width" readonly></td></tr>
+                    <tr data-property-row="geometry"><td data-i18n-key="properties.labels.height"></td><td><input type="number" id="object-height" readonly></td></tr>
+                    <tr data-property-row="wall-geometry"><td data-i18n-key="properties.labels.x1"></td><td><input type="number" id="wall-p1x" readonly></td></tr>
+                    <tr data-property-row="wall-geometry"><td data-i18n-key="properties.labels.y1"></td><td><input type="number" id="wall-p1y" readonly></td></tr>
+                    <tr data-property-row="wall-geometry"><td data-i18n-key="properties.labels.x2"></td><td><input type="number" id="wall-p2x" readonly></td></tr>
+                    <tr data-property-row="wall-geometry"><td data-i18n-key="properties.labels.y2"></td><td><input type="number" id="wall-p2y" readonly></td></tr>
+                    <tr data-property-row="wall-geometry"><td data-i18n-key="properties.labels.length"></td><td><input type="number" id="wall-length" readonly></td></tr>
+                    <tr data-property-row="path-geometry"><td data-i18n-key="properties.labels.length"></td><td><input type="number" id="path-length" readonly></td></tr>
+                    <tr data-property-row="path-geometry"><td data-i18n-key="properties.labels.vertices"></td><td><input type="number" id="path-vertices" readonly></td></tr>
+                    <tr data-property-row="polyline-geometry"><td data-i18n-key="properties.labels.length"></td><td><input type="number" id="polyline-length" readonly></td></tr>
+                    <tr data-property-row="polyline-geometry"><td data-i18n-key="properties.labels.vertices"></td><td><input type="number" id="polyline-vertices" readonly></td></tr>
+                    <tr data-property-row="polyline-geometry"><td data-i18n-key="properties.labels.closed"></td><td><input type="checkbox" id="polyline-closed"></td></tr>
+                    <tr data-property-row="circle-geometry"><td data-i18n-key="properties.labels.centerX"></td><td><input type="number" id="circle-cx" readonly></td></tr>
+                    <tr data-property-row="circle-geometry"><td data-i18n-key="properties.labels.centerY"></td><td><input type="number" id="circle-cy" readonly></td></tr>
+                    <tr data-property-row="circle-geometry"><td data-i18n-key="properties.labels.radius"></td><td><input type="number" id="circle-radius" step="1" min="0"></td></tr>
+                    <tr data-property-row="arc-geometry"><td data-i18n-key="properties.labels.centerX"></td><td><input type="number" id="arc-cx" readonly></td></tr>
+                    <tr data-property-row="arc-geometry"><td data-i18n-key="properties.labels.centerY"></td><td><input type="number" id="arc-cy" readonly></td></tr>
+                    <tr data-property-row="arc-geometry"><td data-i18n-key="properties.labels.radius"></td><td><input type="number" id="arc-radius" readonly></td></tr>
+                    <tr data-property-row="arc-geometry"><td data-i18n-key="properties.labels.startAngle"></td><td><input type="number" id="arc-start-angle" readonly></td></tr>
+                    <tr data-property-row="arc-geometry"><td data-i18n-key="properties.labels.endAngle"></td><td><input type="number" id="arc-end-angle" readonly></td></tr>
+                    <tr data-property-row="transform"><td data-i18n-key="properties.labels.angle"></td><td><input type="number" id="object-angle" step="1" min="-360" max="360"></td></tr>
+                    <tr data-property-row="generic-appearance"><td data-i18n-key="properties.labels.color"></td><td><input type="color" id="generic-color"></td></tr>
+                    <tr data-property-row="generic-appearance"><td data-i18n-key="properties.labels.lineWidth"></td><td><input type="number" id="generic-linewidth" min="1" max="50"></td></tr>
+                    <tr data-property-row="hatch"><td data-i18n-key="properties.labels.pattern"></td><td><select id="hatch-pattern"><option value="SOLID" data-i18n-key="properties.options.solid"></option><option value="LINES" data-i18n-key="properties.options.lines"></option><option value="CROSS" data-i18n-key="properties.options.cross"></option></select></td></tr>
+                    <tr data-property-row="hatch"><td data-i18n-key="properties.labels.scale"></td><td><input type="number" id="hatch-scale" min="1" max="200" step="1"></td></tr>
+                    <tr data-property-row="hatch"><td data-i18n-key="properties.labels.angle"></td><td><input type="number" id="hatch-angle" min="-360" max="360" step="1"></td></tr>
+                    <tr data-property-row="hatch"><td data-i18n-key="properties.labels.color"></td><td><input type="color" id="hatch-color"></td></tr>
+                    <tr data-property-row="wall"><td data-i18n-key="properties.labels.wallType"></td><td><select id="wall-type"><option value="EXTERIOR" data-i18n-key="properties.options.exterior"></option><option value="INTERIOR" data-i18n-key="properties.options.interior"></option><option value="PARTITION" data-i18n-key="properties.options.partition"></option></select></td></tr>
+                    <tr data-property-row="wall"><td data-i18n-key="properties.labels.thickness"></td><td><input type="number" id="wall-thickness" min="1" max="50"></td></tr>
+                    <tr data-property-row="wall"><td data-i18n-key="properties.labels.color"></td><td><input type="color" id="wall-color"></td></tr>
+                    <tr data-property-row="symbol"><td data-i18n-key="properties.labels.color"></td><td><input type="color" id="symbol-color"></td></tr>
+                    <tr data-property-row="stairs"><td data-i18n-key="properties.labels.stairsType"></td><td><select id="stairs-type"><option value="STAIRS" data-i18n-key="properties.options.stairs"></option><option value="LADDER" data-i18n-key="properties.options.ladder"></option></select></td></tr>
+                    <tr data-property-row="text"><td data-i18n-key="properties.labels.style"></td><td><select id="text-style"></select></td></tr>
+                    <tr data-property-row="text"><td data-i18n-key="properties.labels.textContent"></td><td><textarea id="text-content" rows="2"></textarea></td></tr>
+                    <tr data-property-row="text"><td data-i18n-key="properties.labels.height"></td><td><input type="number" id="text-height" min="1" max="200"></td></tr>
+                    <tr data-property-row="text"><td data-i18n-key="properties.labels.color"></td><td><input type="color" id="text-color"></td></tr>
+                    <tr data-property-row="evacuation-path"><td data-i18n-key="properties.labels.lineWidth"></td><td><input type="number" id="path-width" min="1" max="50"></td></tr>
+                    <tr data-property-row="evacuation-path"><td data-i18n-key="properties.labels.color"></td><td><input type="color" id="path-color"></td></tr>
+                    <tr data-property-row="pdf"><td data-i18n-key="properties.labels.opacity"></td><td><input type="range" id="pdf-opacity" min="0" max="100" value="50"></td></tr>
+                    <tr data-property-row="dimension"><td data-i18n-key="properties.labels.style"></td><td><select id="dimension-style"></select></td></tr>
+                    <tr data-property-row="dimension"><td data-i18n-key="properties.labels.textContent"></td><td><textarea id="dimension-text-override" rows="1"></textarea></td></tr>
+                </tbody>
+            </table>
+            <hr>
+            <button id="delete-button" data-i18n-aria-label="properties.delete" data-i18n-tooltip="properties.delete">
+                <div class="icon icon-delete"></div>
+                <span data-i18n-key="properties.deleteButton"></span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="style-manager-window" class="window-wrapper hidden" style="left: 240px; top: 100px; width: 320px; min-height: 400px; height: 420px;">
+    <div class="window-title-bar">
+        <div class="window-icon"><div class="icon icon-style-manager"></div></div>
+        <span class="window-title" data-i18n-key="styleManager.window.title"></span>
+        <div class="window-controls">
+            <button class="window-control-button close-button" data-i18n-aria-label="window.close">
+                <div class="icon icon-close"></div>
+            </button>
+        </div>
+    </div>
+    <div class="window-content" style="gap: 12px;">
+        <div id="style-manager-panel" style="display: flex; flex-direction: row; gap: 12px; height: 100%;">
+            <div id="style-list-container" style="display: flex; flex-direction: column; flex-basis: 40%;">
+                <h3 data-i18n-key="styleManager.styles" style="margin: 0 0 4px 0; font-size: 14px; font-weight: 500;"></h3>
+                <select id="style-list" size="5" style="width: 100%; flex-grow: 1; background-color: var(--background-color); border: 1px solid var(--grid-line-color-major); color: var(--text-color);"></select>
+            </div>
+            <div id="style-controls-container" style="display: flex; flex-direction: column; flex-grow: 1; gap: 8px;">
+                 <div id="style-controls" style="display: flex; justify-content: space-between; gap: 4px;">
+                    <button id="style-set-current" class="selection-button" data-i18n-key="styleManager.setCurrent" style="flex-grow: 1;"></button>
+                    <button id="style-new" class="selection-button" data-i18n-key="styleManager.new"></button>
+                    <button id="style-delete" class="selection-button" data-i18n-key="styleManager.delete"></button>
+                </div>
+                <h3 data-i18n-key="styleManager.properties" style="margin: 8px 0 4px 0; font-size: 14px; font-weight: 500;"></h3>
+                <table class="properties-table">
+                    <tbody>
+                        <tr><td data-i18n-key="styleManager.fontName"></td><td><input type="text" id="style-font-family"></td></tr>
+                        <tr><td data-i18n-key="styleManager.widthFactor"></td><td><input type="number" id="style-width-factor" step="0.1" min="0.1"></td></tr>
+                        <tr><td data-i18n-key="styleManager.obliqueAngle"></td><td><input type="number" id="style-oblique-angle" step="1" min="-85" max="85"></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="dimension-style-manager-window" class="window-wrapper hidden" style="left: 580px; top: 100px; width: 340px; height: 500px;">
+    <div class="window-title-bar">
+        <div class="window-icon"><div class="icon icon-dimension-style-manager"></div></div>
+        <span class="window-title" data-i18n-key="dimStyleManager.window.title"></span>
+        <div class="window-controls">
+            <button class="window-control-button close-button" data-i18n-aria-label="window.close">
+                <div class="icon icon-close"></div>
+            </button>
+        </div>
+    </div>
+    <div class="window-content">
+        <div id="dim-style-manager-panel" style="display: flex; flex-direction: column; gap: 12px; height: 100%;">
+            <div style="display: flex; flex-direction: row; gap: 12px;">
+                <div id="dim-style-list-container" style="display: flex; flex-direction: column; flex-basis: 40%;">
+                    <h3 data-i18n-key="styleManager.styles" style="margin: 0 0 4px 0; font-size: 14px; font-weight: 500;"></h3>
+                    <select id="dim-style-list" size="5" style="width: 100%; flex-grow: 1; background-color: var(--background-color); border: 1px solid var(--grid-line-color-major); color: var(--text-color);"></select>
+                </div>
+                <div id="dim-style-controls-container" style="display: flex; flex-direction: column; flex-grow: 1; gap: 8px;">
+                     <div id="dim-style-controls" style="display: flex; justify-content: space-between; gap: 4px;">
+                        <button id="dim-style-set-current" class="selection-button" data-i18n-key="styleManager.setCurrent" style="flex-grow: 1;"></button>
+                        <button id="dim-style-new" class="selection-button" data-i18n-key="styleManager.new"></button>
+                        <button id="dim-style-delete" class="selection-button" data-i18n-key="styleManager.delete"></button>
+                    </div>
+                </div>
+            </div>
+            <div id="dim-style-properties-container" style="overflow-y: auto; flex-grow: 1;">
+                <h3 data-i18n-key="styleManager.properties" style="margin: 8px 0 4px 0; font-size: 14px; font-weight: 500;"></h3>
+                <table class="properties-table">
+                    <tbody>
+                        <!-- Lines -->
+                        <tr><td colspan="2"><b data-i18n-key="dimStyleManager.lines"></b></td></tr>
+                        <tr><td data-i18n-key="dimStyleManager.lineColor"></td><td><input type="color" id="dim-style-line-color"></td></tr>
+                        <tr><td data-i18n-key="dimStyleManager.extLineColor"></td><td><input type="color" id="dim-style-ext-line-color"></td></tr>
+                        <tr><td data-i18n-key="dimStyleManager.extLineOffset"></td><td><input type="number" id="dim-style-ext-line-offset" min="0" step="0.5"></td></tr>
+                        <tr><td data-i18n-key="dimStyleManager.extLineExtend"></td><td><input type="number" id="dim-style-ext-line-extend" min="0" step="0.5"></td></tr>
+                        <!-- Arrows -->
+                        <tr><td colspan="2"><hr></td></tr>
+                        <tr><td colspan="2"><b data-i18n-key="dimStyleManager.arrows"></b></td></tr>
+                        <tr><td data-i18n-key="dimStyleManager.arrowType"></td><td><select id="dim-style-arrow-type"><option value="ARROW" data-i18n-key="dimStyleManager.arrowType.arrow"></option><option value="TICK" data-i18n-key="dimStyleManager.arrowType.tick"></option><option value="DOT" data-i18n-key="dimStyleManager.arrowType.dot"></option></select></td></tr>
+                        <tr><td data-i18n-key="dimStyleManager.arrowSize"></td><td><input type="number" id="dim-style-arrow-size" min="0" step="0.5"></td></tr>
+                        <!-- Text -->
+                        <tr><td colspan="2"><hr></td></tr>
+                        <tr><td colspan="2"><b data-i18n-key="dimStyleManager.text"></b></td></tr>
+                        <tr><td data-i18n-key="dimStyleManager.textStyle"></td><td><select id="dim-style-text-style"></select></td></tr>
+                        <tr><td data-i18n-key="dimStyleManager.textColor"></td><td><input type="color" id="dim-style-text-color"></td></tr>
+                        <tr><td data-i18n-key="dimStyleManager.textHeight"></td><td><input type="number" id="dim-style-text-height" min="1" step="0.5"></td></tr>
+                        <tr><td data-i18n-key="dimStyleManager.textOffset"></td><td><input type="number" id="dim-style-text-offset" min="0" step="0.5"></td></tr>
+                         <!-- Units -->
+                        <tr><td colspan="2"><hr></td></tr>
+                        <tr><td colspan="2"><b data-i18n-key="dimStyleManager.units"></b></td></tr>
+                        <tr><td data-i18n-key="dimStyleManager.precision"></td><td><input type="number" id="dim-style-precision" min="0" max="8" step="1"></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="feature-tree-window" class="window-wrapper hidden" style="left: 20px; top: 470px; width: 220px; height: 300px;">
+    <div class="window-title-bar">
+        <div class="window-icon"><div class="icon icon-sketch"></div></div>
+        <span class="window-title" data-i18n-key="featureTree.window.title"></span>
+        <div class="window-controls">
+            <button class="window-control-button close-button" data-i18n-aria-label="window.close">
+                <div class="icon icon-close"></div>
+            </button>
+        </div>
+    </div>
+    <div class="window-content">
+        <div id="feature-tree-panel-content">
+            <!-- Content will be loaded from panels/feature-tree-panel.html -->
+        </div>
+    </div>
+</div>
+
+
+<div id="log-viewer-window" class="window-wrapper hidden" style="left: 260px; top: 470px; width: 500px; height: 300px;">
+    <div class="window-title-bar">
+        <div class="window-icon"><div class="icon icon-bug"></div></div>
+        <span class="window-title" data-i18n-key="window.logViewer.title"></span>
+        <div class="window-controls">
+            <button class="window-control-button close-button" data-i18n-aria-label="window.close">
+                <div class="icon icon-close"></div>
+            </button>
+        </div>
+    </div>
+    <div id="log-viewer-panel-content" class="window-content">
+        <!-- Content will be loaded from panels/log-viewer.html -->
+    </div>
+</div>

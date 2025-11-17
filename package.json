@@ -1,0 +1,42 @@
+{
+  "name": "evacuation-plan-drawer",
+  "version": "1.0.0",
+  "description": "Desktop application for drawing evacuation plans.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "vitest run"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "electron": "^39.2.1",
+    "electron-updater": "^6.2.1",
+    "jsdom": "^27.0.1",
+    "typescript": "^5.9.3",
+    "vite": "^6.4.1",
+    "vite-plugin-node-polyfills": "^0.24.0",
+    "vitest": "^4.0.9"
+  },
+  "build": {
+    "appId": "com.electron.evacuation-plan-drawer",
+    "productName": "Малювальник",
+    "win": {
+      "target": "nsis"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "linux": {
+      "target": "AppImage"
+    },
+    "publish": {
+      "provider": "github"
+    }
+  },
+  "dependencies": {
+    "cassowary": "^0.0.2"
+  }
+}

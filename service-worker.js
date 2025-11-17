@@ -1,0 +1,328 @@
+const CACHE_NAME = 'evacuation-planner-cache-v10';
+const urlsToCache = [
+  // Root files
+  '/',
+  './index.html',
+  './index.css',
+  './index.tsx',
+  './manifest.json',
+  './prompt.html',
+  './prompt-preload.js',
+  // Assets
+  './assets/icons.css',
+  // Icons (individual files)
+  './assets/icons/3d-view.svg',
+  './assets/icons/add.svg',
+  './assets/icons/annotations-tools.svg',
+  './assets/icons/arc.svg',
+  './assets/icons/bug.svg',
+  './assets/icons/chamfer.svg',
+  './assets/icons/circle.svg',
+  './assets/icons/close-editor.svg',
+  './assets/icons/close.svg',
+  './assets/icons/column.svg',
+  './assets/icons/coniferous-tree.svg',
+  './assets/icons/constraint-angle.svg',
+  './assets/icons/constraint-horizontal.svg',
+  './assets/icons/constraint-length.svg',
+  './assets/icons/constraint-parallel.svg',
+  './assets/icons/constraint-perpendicular.svg',
+  './assets/icons/constraint-tangent.svg',
+  './assets/icons/constraint-vertical.svg',
+  './assets/icons/create-block.svg',
+  './assets/icons/cut.svg',
+  './assets/icons/deciduous-tree.svg',
+  './assets/icons/delete.svg',
+  './assets/icons/dimaligned.svg',
+  './assets/icons/dimension-style-manager.svg',
+  './assets/icons/dimlinear.svg',
+  './assets/icons/door.svg',
+  './assets/icons/drawing-tools.svg',
+  './assets/icons/electrical-panel.svg',
+  './assets/icons/emergency-evacuation-path.svg',
+  './assets/icons/evacuation-path.svg',
+  './assets/icons/exit.svg',
+  './assets/icons/export-pdf.svg',
+  './assets/icons/export-png.svg',
+  './assets/icons/extend.svg',
+  './assets/icons/extrude.svg',
+  './assets/icons/file-tools.svg',
+  './assets/icons/fillet.svg',
+  './assets/icons/finish-sketch.svg',
+  './assets/icons/fire-extinguisher.svg',
+  './assets/icons/fire-hydrant.svg',
+  './assets/icons/first-aid.svg',
+  './assets/icons/geodetic-point.svg',
+  './assets/icons/grid-snap.svg',
+  './assets/icons/hatch.svg',
+  './assets/icons/insert-block.svg',
+  './assets/icons/ladder.svg',
+  './assets/icons/lamppost.svg',
+  './assets/icons/layers.svg',
+  './assets/icons/lock.svg',
+  './assets/icons/loft.svg',
+  './assets/icons/manhole.svg',
+  './assets/icons/match-properties.svg',
+  './assets/icons/mirror.svg',
+  './assets/icons/modification-tools.svg',
+  './assets/icons/move-down.svg',
+  './assets/icons/move-up.svg',
+  './assets/icons/object-snap.svg',
+  './assets/icons/offset.svg',
+  './assets/icons/ortho-mode.svg',
+  './assets/icons/pan.svg',
+  './assets/icons/pdf-underlay.svg',
+  './assets/icons/polyline.svg',
+  './assets/icons/power-pole.svg',
+  './assets/icons/precision-tools.svg',
+  './assets/icons/properties.svg',
+  './assets/icons/redo.svg',
+  './assets/icons/revolve.svg',
+  './assets/icons/rotate-by-ref.svg',
+  './assets/icons/save-block.svg',
+  './assets/icons/scale-by-ref.svg',
+  './assets/icons/select.svg',
+  './assets/icons/set-base.svg',
+  './assets/icons/sketch.svg',
+  './assets/icons/snap-center.svg',
+  './assets/icons/snap-endpoint.svg',
+  './assets/icons/snap-intersection.svg',
+  './assets/icons/snap-midpoint.svg',
+  './assets/icons/snap-nearest.svg',
+  './assets/icons/snap-perpendicular.svg',
+  './assets/icons/snap-quadrant.svg',
+  './assets/icons/snap-tangent.svg',
+  './assets/icons/stairs.svg',
+  './assets/icons/style-manager.svg',
+  './assets/icons/sweep.svg',
+  './assets/icons/text.svg',
+  './assets/icons/trim.svg',
+  './assets/icons/undo.svg',
+  './assets/icons/unlock.svg',
+  './assets/icons/visibility-off.svg',
+  './assets/icons/visibility-on.svg',
+  './assets/icons/wall-exterior.svg',
+  './assets/icons/wall-interior.svg',
+  './assets/icons/wall-partition.svg',
+  './assets/icons/window.svg',
+  // PWA Icons
+  './icon-192.png',
+  './icon-512.png',
+  // Locales
+  './locales/en.json',
+  './locales/uk.json',
+  // Panel HTML files
+  './panels/annotations-toolbar.html',
+  './panels/block-editor-toolbar.html',
+  './panels/command-line.html',
+  './panels/drawing-toolbar.html',
+  './panels/file-toolbar.html',
+  './panels/log-viewer.html',
+  './panels/modals.html',
+  './panels/modification-toolbar.html',
+  './panels/object-snap-toolbar.html',
+  './panels/precision-toolbar.html',
+  './panels/primary-toolbar.html',
+  './panels/sketch-toolbar.html',
+  './panels/stairs-tool-options.html',
+  './panels/status-bar.html',
+  './panels/symbol-palette.html',
+  './panels/topo-symbol-palette.html',
+  './panels/window-container.html',
+  './panels/workspace-selection-modal.html',
+  // src root
+  './src/app.ts',
+  './src/canvas-controller.ts',
+  './src/command-line-controller.ts',
+  './src/command-manager.ts',
+  './src/constants.ts',
+  './src/coordinate-input-controller.ts',
+  './src/dialog-controller.ts',
+  './src/grip-context-menu-controller.ts',
+  './src/grips.ts',
+  './src/history-manager.ts',
+  './src/i18n.ts',
+  './src/inline-text-editor.ts',
+  './src/input-handler.ts',
+  './src/layer.ts',
+  './src/layers-controller.ts',
+  './src/log-viewer-controller.ts',
+  './src/object-snap-controller.ts',
+  './src/properties-controller.ts',
+  './src/snapping.ts',
+  './src/stairs-tool-options-controller.ts',
+  './src/status-bar-controller.ts',
+  './src/style-manager-controller.ts',
+  './src/style-manager.ts',
+  './src/symbol-palette-controller.ts',
+  './src/tooltip-controller.ts',
+  './src/ui-loader.ts',
+  './src/window-component.ts',
+  './src/window-manager.ts',
+  './src/workspace-manager.ts',
+  './src/dimension-style-manager-controller.ts',
+  './src/three-d-controller.ts',
+  // src/commands
+  './src/commands/block-command.ts',
+  './src/commands/chamfer-command.ts',
+  './src/commands/command.ts',
+  './src/commands/cut-command.ts',
+  './src/commands/dimaligned-command.ts',
+  './src/commands/dimlinear-command.ts',
+  './src/commands/extend-command.ts',
+  './src/commands/extrude-command.ts',
+  './src/commands/fillet-command.ts',
+  './src/commands/insert-command.ts',
+  './src/commands/line-command.ts',
+  './src/commands/loft-command.ts',
+  './src/commands/match-properties-command.ts',
+  './src/commands/mirror-command.ts',
+  './src/commands/offset-command.ts',
+  './src/commands/revolve-command.ts',
+  './src/commands/sweep-command.ts',
+  './src/commands/trim-command.ts',
+  // src/controllers
+  './src/controllers/interfaces.ts',
+  './src/controllers/modification-toolbar.controller.ts',
+  './src/controllers/primary-toolbar.controller.ts',
+  './src/controllers/secondary-toolbar.controller.ts',
+  './src/toolbar-controller.ts', // Now ToolbarManager
+  // src/scene
+  './src/scene/aligned-dimension-object.ts',
+  './src/scene/arc-object.ts',
+  './src/scene/block-definition.ts',
+  './src/scene/block-reference.ts',
+  './src/scene/circle-object.ts',
+  './src/scene/cut-object.ts',
+  './src/scene/dimension-object.ts',
+  './src/scene/door.ts',
+  './src/scene/emergency-evacuation-path.ts',
+  './src/scene/evacuation-path.ts',
+  './src/scene/extrude-object.ts',
+  './src/scene/factory.ts',
+  './src/scene/group-object.ts',
+  './src/scene/hatch-object.ts',
+  './src/scene/linear-dimension-object.ts',
+  './src/scene/loft-object.ts',
+  './src/scene/pdf-underlay.ts',
+  './src/scene/point.ts',
+  './src/scene/polyline-object.ts',
+  './src/scene/revolve-object.ts',
+  './src/scene/scene-object.ts',
+  './src/scene/sketch-object.ts',
+  './src/scene/stairs-object.ts',
+  './src/scene/sweep-object.ts',
+  './src/scene/symbol-object.ts',
+  './src/scene/text-object.ts',
+  './src/scene/wall-geometry.ts',
+  './src/scene/wall-mounted-object.ts',
+  './src/scene/wall.ts',
+  './src/scene/window.ts',
+  // src/services
+  './src/services/gemini-service.ts',
+  './src/services/geometry-service.ts',
+  './src/services/layer.service.ts',
+  './src/services/logger.ts',
+  './src/services/project-state.service.ts',
+  './src/services/scene.service.ts',
+  './src/services/selection.service.ts',
+  // src/sketcher
+  './src/sketcher/constraint-solver.ts',
+  // src/styles
+  './src/styles/dimension-style.ts',
+  './src/styles/text-style.ts',
+  // src/tests
+  './src/tests/e2e.test.ts',
+  './src/tests/geometry-service.test.ts',
+  './src/tests/geometry.test.ts',
+  './src/tests/properties-controller.test.ts',
+  // src/tools
+  './src/tools/angle-constraint-tool.ts',
+  './src/tools/arc-tool.ts',
+  './src/tools/chamfer-tool.ts',
+  './src/tools/circle-tool.ts',
+  './src/tools/constraint-tool-base.ts',
+  './src/tools/door-tool.ts',
+  './src/tools/emergency-evacuation-path-tool.ts',
+  './src/tools/evacuation-path-tool.ts',
+  './src/tools/extend-tool.ts',
+  './src/tools/fillet-tool.ts',
+  './src/tools/hatch-tool.ts',
+  './src/tools/horizontal-constraint-tool.ts',
+  './src/tools/length-constraint-tool.ts',
+  './src/tools/mirror-tool.ts',
+  './src/tools/offset-tool.ts',
+  './src/tools/pan-tool.ts',
+  './src/tools/parallel-constraint-tool.ts',
+  './src/tools/perpendicular-constraint-tool.ts',
+  './src/tools/polyline-tool.ts',
+  './src/tools/rotate-by-reference-tool.ts',
+  './src/tools/scale-by-reference-tool.ts',
+  './src/tools/select-tool.ts',
+  './src/tools/sketch-tool.ts',
+  './src/tools/stairs-tool.ts',
+  './src/tools/tangent-constraint-tool.ts',
+  './src/tools/text-tool.ts',
+  './src/tools/tool.ts',
+  './src/tools/trim-tool.ts',
+  './src/tools/wall-tool.ts',
+  './src/tools/window-tool.ts',
+  // src/types
+  './src/types/cassowary.d.ts',
+  './src/types/jsts.d.ts',
+  // src/utils
+  './src/utils/geometry.ts',
+  './src/utils/grip-drawer.ts',
+  './src/utils/intersections.ts',
+  './src/utils/snap-indicator-drawer.ts',
+  './src/utils/test-runner.ts',
+  // External libraries from CDN
+  'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
+  'https://cdnjs.cloudflare.com/ajax/libs/jsts/2.9.0/jsts.min.js',
+  'https://cdnjs.cloudflare.com/ajax/libs/cassowary/0.8.2/cassowary.js',
+  'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js',
+  'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js',
+  'https://cdnjs.cloudflare.com/ajax/libs/csg.js/1.0.1/csg.min.js',
+];
+
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => {
+        console.log('Opened cache');
+        return cache.addAll(urlsToCache);
+      })
+      .then(() => self.skipWaiting()) // Force the waiting service worker to become the active service worker.
+  );
+});
+
+self.addEventListener('activate', event => {
+  const cacheWhitelist = [CACHE_NAME];
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => {
+          if (cacheWhitelist.indexOf(cacheName) === -1) {
+            // Delete old caches
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
+});
+
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request)
+      .then(response => {
+        // Cache hit - return response
+        if (response) {
+          return response;
+        }
+        // Not in cache - fetch from network
+        return fetch(event.request);
+      }
+    )
+  );
+});

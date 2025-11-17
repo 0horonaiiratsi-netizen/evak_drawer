@@ -1,0 +1,23 @@
+<style>
+    #log-viewer-content {
+        height: 100%;
+        overflow-y: auto;
+        font-family: 'Consolas', 'Menlo', monospace;
+        font-size: 12px;
+        line-height: 1.4;
+        white-space: pre-wrap;
+        word-break: break-all;
+        background-color: var(--background-color);
+        padding: 4px;
+        border-radius: 3px;
+    }
+    .log-entry {
+        padding: 2px 4px;
+        border-bottom: 1px solid var(--grid-line-color-minor);
+    }
+    .log-entry.error { color: #f48771; }
+    .log-entry.warn { color: #f3f99d; }
+    .log-entry.info { color: #87cefa; }
+    .log-time { opacity: 0.6; margin-right: 8px; }
+</style>
+<div id="log-viewer-content"></div>

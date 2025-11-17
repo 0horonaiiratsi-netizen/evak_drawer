@@ -1,0 +1,994 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+*/
+
+:root {
+    --background-color: #1a1a1a;
+    --grid-line-color-major: #404040;
+    --grid-line-color-minor: #2c2c2c;
+    --toolbar-background: #252526;
+    --button-hover-background: #3e3e42;
+    --button-active-background: #007acc;
+    --text-color: #cccccc;
+    --selected-stroke-color: #0099ff;
+    --wall-color: #e0e0e0;
+    --window-inactive-title-bg: #3a3d41;
+    --window-active-title-bg: #0078d4;
+    --window-border-color: #505050;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    background-color: var(--background-color);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+#app-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    position: relative;
+}
+
+#3d-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none; /* Hidden by default */
+    z-index: 5;
+}
+
+/* Hide 2D canvas and show 3D canvas in 3D mode */
+body.mode-3d #app-canvas {
+    display: none;
+}
+body.mode-3d #3d-canvas {
+    display: block;
+}
+
+/* Hide UI elements that don't make sense in 3D */
+body.mode-3d #object-snap-toolbar,
+body.mode-3d #coord-input,
+body.mode-3d #grip-context-menu {
+    display: none !important; /* Force hide */
+}
+
+#app-canvas.pickbox-cursor {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='white' stroke-width='1.5' d='M9 3H4v5M15 3h5v5M9 21H4v-5M15 21h5v-5'/%3E%3C/svg%3E") 12 12, crosshair;
+}
+
+#app-canvas.rotate-cursor {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20.49 15a9 9 0 1 1-2.12-9.36C19.95 6.7 21.29 7.8 22 9'/%3E%3Cpath d='M18 9h4V5'/%3E%3C/svg%3E") 12 12, auto;
+}
+
+#primary-toolbar, .secondary-toolbar {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--toolbar-background);
+    border-radius: 8px;
+    padding: 4px;
+    display: flex;
+    gap: 4px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    z-index: 10;
+    align-items: center; /* Vertically center items */
+}
+
+.secondary-toolbar {
+    top: 78px; /* Position below the primary toolbar */
+    z-index: 9;
+    display: none; /* Hidden by default */
+}
+
+#sketch-toolbar, #block-editor-toolbar {
+    top: 20px; /* Position where the primary toolbar was */
+    z-index: 11; /* Above primary */
+    display: none; /* Hidden by default */
+}
+
+body.sketch-mode-active #primary-toolbar,
+body.sketch-mode-active .secondary-toolbar,
+body.block-edit-mode #primary-toolbar,
+body.block-edit-mode .secondary-toolbar {
+    display: none;
+}
+
+body.sketch-mode-active #symbol-palette,
+body.sketch-mode-active #topo-symbol-palette,
+body.block-edit-mode #symbol-palette,
+body.block-edit-mode #topo-symbol-palette {
+    display: none; /* Hide symbol palettes in sketch mode */
+}
+
+body.sketch-mode-active #sketch-toolbar,
+body.block-edit-mode #block-editor-toolbar {
+    display: flex; /* Override the generic .secondary-toolbar rule */
+}
+
+
+#object-snap-toolbar {
+    /* Overrides from .secondary-toolbar */
+    top: auto;
+    bottom: 80px; /* Position above status bar (50px) + button height/padding */
+    left: 12px;
+    transform: none;
+    z-index: 201;
+}
+
+.secondary-toolbar.visible {
+    display: flex;
+}
+
+.tool-button {
+    background-color: transparent;
+    border: none;
+    color: var(--text-color);
+    padding: 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.15s ease;
+}
+
+.tool-button:hover:not(:disabled) {
+    background-color: var(--button-hover-background);
+}
+
+.tool-button.active {
+    background-color: var(--button-active-background);
+    color: white;
+}
+
+.tool-button:disabled {
+    color: var(--grid-line-color-major);
+    cursor: not-allowed;
+}
+
+.toolbar-title {
+    color: var(--text-color);
+    font-size: 14px;
+    font-weight: 500;
+    padding: 0 8px;
+    white-space: nowrap;
+}
+
+.toolbar-divider {
+    width: 1px;
+    background-color: var(--grid-line-color-major);
+    margin: 4px 8px;
+}
+
+#stairs-tool-options {
+    position: absolute;
+    top: 136px; /* Position below other toolbars */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--toolbar-background);
+    border-radius: 8px;
+    padding: 4px;
+    display: none; /* Hidden by default */
+    gap: 4px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    z-index: 8;
+}
+
+#stairs-tool-options.visible {
+    display: flex;
+}
+
+.context-button {
+    background-color: transparent;
+    border: none;
+    color: var(--text-color);
+    padding: 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.15s ease;
+}
+
+.context-button:hover {
+    background-color: var(--button-hover-background);
+}
+
+.context-button.active {
+    background-color: var(--button-active-background);
+    color: white;
+}
+
+
+#symbol-palette, #topo-symbol-palette {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: var(--toolbar-background);
+    border-radius: 8px;
+    padding: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    z-index: 10;
+}
+
+#symbol-palette {
+    left: 20px;
+}
+
+#topo-symbol-palette {
+    right: 20px;
+}
+
+/* When in classic workspace, change topo-symbol-palette layout to a horizontal bottom bar */
+body[data-workspace="classic"] #topo-symbol-palette {
+    top: auto;
+    right: auto; /* Unset the 'right' property */
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    flex-direction: row;
+}
+
+.symbol-button {
+    background-color: transparent;
+    border: none;
+    color: var(--text-color);
+    padding: 8px;
+    border-radius: 5px;
+    cursor: grab;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.15s ease;
+}
+
+.symbol-button:hover {
+    background-color: var(--button-hover-background);
+}
+
+/* --- Window System Styles --- */
+#window-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Allows clicks to pass through to the canvas */
+    z-index: 100;
+}
+
+.window-wrapper {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--toolbar-background);
+    border: 1px solid var(--window-border-color);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    border-radius: 6px;
+    min-width: 200px;
+    min-height: 150px;
+    pointer-events: auto; /* Windows are interactive */
+    resize: both;
+    overflow: hidden;
+}
+
+.window-wrapper.hidden {
+    display: none;
+}
+
+.window-title-bar {
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    background-color: var(--window-inactive-title-bg);
+    color: var(--text-color);
+    cursor: grab;
+    flex-shrink: 0;
+    user-select: none;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.window-wrapper.active .window-title-bar {
+    background-color: var(--window-active-title-bg);
+    color: white;
+}
+
+.window-title-bar:active {
+    cursor: grabbing;
+}
+
+.window-icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+
+.window-title {
+    flex-grow: 1;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.window-controls {
+    display: flex;
+    gap: 4px;
+}
+
+.window-control-button {
+    width: 24px;
+    height: 24px;
+    background: none;
+    border: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.window-control-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.window-content {
+    padding: 8px;
+    flex-grow: 1;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- Panel Style Overrides to fit into Windows --- */
+#layers-panel, #properties-panel {
+    position: static; /* No longer absolutely positioned */
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    color: var(--text-color);
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-sizing: border-box;
+}
+
+#layers-panel h3, #properties-panel h3 {
+    margin: 0;
+    padding: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    border-bottom: 1px solid var(--grid-line-color-major);
+}
+
+#layers-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    overflow-y: auto;
+    flex-grow: 1; /* Allow list to take available space */
+}
+
+.layer-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.layer-item:hover {
+    background-color: var(--button-hover-background);
+}
+
+.layer-item.active {
+    background-color: var(--button-active-background);
+    color: white;
+}
+
+.layer-item .visibility-toggle,
+.layer-item .lock-toggle {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    padding: 2px;
+    display: flex;
+    align-items: center;
+}
+
+.layer-item .visibility-toggle.hidden-layer,
+.layer-item .lock-toggle.locked {
+    opacity: 0.5;
+}
+
+.layer-item .layer-name {
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 14px;
+}
+
+.layer-item input.layer-name-input {
+    width: 100%;
+    background-color: var(--background-color);
+    border: 1px solid var(--selected-stroke-color);
+    color: var(--text-color);
+    font-family: inherit;
+    font-size: 14px;
+    padding: 2px;
+    border-radius: 2px;
+    outline: none;
+}
+
+#layers-controls {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    padding-top: 4px;
+    border-top: 1px solid var(--grid-line-color-major);
+}
+
+#layers-controls button {
+    background-color: transparent;
+    border: none;
+    color: var(--text-color);
+    padding: 6px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.15s ease, opacity 0.15s ease;
+}
+
+#layers-controls button:hover:not(:disabled) {
+    background-color: var(--button-hover-background);
+}
+
+#layers-controls button:disabled {
+    color: var(--grid-line-color-major);
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+/* --- Properties Panel --- */
+#multiple-selection-info {
+    padding: 8px 4px;
+    background-color: var(--grid-line-color-minor);
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+#selection-management-section {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--grid-line-color-major);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+#selection-management-section label {
+    text-align: left;
+    opacity: 0.8;
+    font-size: 13px;
+}
+
+.selection-button {
+    background-color: var(--button-hover-background);
+    color: var(--text-color);
+    border: 1px solid var(--grid-line-color-major);
+    width: 100%;
+    padding: 6px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background-color 0.15s ease;
+}
+
+.selection-button:hover:not(:disabled) {
+    background-color: var(--grid-line-color-major);
+}
+
+.selection-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: var(--button-hover-background);
+}
+
+.properties-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.properties-table td {
+    padding: 6px 4px;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--grid-line-color-major);
+}
+
+.properties-table tr:last-of-type td {
+    border-bottom: none;
+}
+
+.properties-table td:first-child {
+    width: 45%;
+    white-space: nowrap;
+    opacity: 0.9;
+    padding-right: 8px;
+}
+
+.properties-table input[type="number"],
+.properties-table input[type="color"],
+.properties-table input[type="range"],
+.properties-table textarea,
+.properties-table select {
+    width: 100%;
+    box-sizing: border-box;
+    background-color: var(--background-color);
+    border: 1px solid var(--grid-line-color-major);
+    color: var(--text-color);
+    border-radius: 4px;
+    padding: 4px;
+    font-size: 12px;
+    font-family: inherit;
+}
+
+.properties-table input:read-only {
+    background-color: var(--grid-line-color-minor);
+    color: var(--text-color-darker, #999);
+    border-style: dashed;
+    cursor: default;
+    user-select: text;
+}
+.properties-table input:read-only:focus {
+    outline: none;
+    border-color: var(--grid-line-color-major);
+}
+
+.properties-table input[type="checkbox"] {
+    accent-color: var(--selected-stroke-color);
+    height: 16px;
+    width: 16px;
+}
+
+.properties-table select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23cccccc' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    background-size: 1em;
+    padding-right: 2rem;
+}
+
+.properties-table textarea {
+    resize: vertical;
+    min-height: 40px;
+}
+
+.properties-table input[type="color"] {
+    padding: 1px;
+    height: 24px;
+}
+
+.properties-table input[type="range"] {
+    padding: 0;
+    -webkit-appearance: none;
+    appearance: none;
+    background: var(--grid-line-color-minor);
+    height: 6px;
+    border-radius: 3px;
+}
+
+.properties-table input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: var(--text-color);
+    cursor: pointer;
+    border-radius: 50%;
+    border: 2px solid var(--background-color);
+}
+
+.properties-table input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: var(--text-color);
+    cursor: pointer;
+    border-radius: 50%;
+    border: 2px solid var(--background-color);
+}
+
+#properties-panel hr {
+    border: none;
+    border-top: 1px solid var(--grid-line-color-major);
+    margin: 12px 0 8px 0;
+}
+
+#delete-button {
+    background-color: #5c2c2c;
+    color: #ffc0c0;
+    border: 1px solid #7a3e3e;
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 14px;
+    transition: background-color 0.15s ease;
+}
+
+#delete-button:hover {
+    background-color: #7a3e3e;
+}
+
+#tooltip {
+    position: fixed;
+    background-color: #333;
+    color: #f0f0f0;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+    z-index: 1000;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.15s ease;
+    white-space: nowrap;
+}
+
+/* --- Coordinate Input Box --- */
+#coord-input {
+    position: fixed;
+    background-color: var(--toolbar-background);
+    color: var(--text-color);
+    padding: 6px;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    z-index: 500;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    font-size: 13px;
+    pointer-events: all;
+}
+
+#coord-input.hidden {
+    display: none;
+}
+
+#coord-input label {
+    opacity: 0.8;
+}
+
+#coord-input input {
+    background-color: var(--background-color);
+    border: 1px solid var(--grid-line-color-major);
+    color: var(--text-color);
+    border-radius: 3px;
+    padding: 4px;
+    width: 80px;
+    font-size: 13px;
+}
+
+#coord-input input:focus {
+    outline: none;
+    border-color: var(--selected-stroke-color);
+}
+
+/* --- Context Menu --- */
+#grip-context-menu {
+    position: fixed;
+    background-color: var(--toolbar-background);
+    color: var(--text-color);
+    border: 1px solid var(--window-border-color);
+    border-radius: 5px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    z-index: 600;
+    display: flex;
+    flex-direction: column;
+    padding: 4px;
+}
+
+#grip-context-menu.hidden {
+    display: none;
+}
+
+#grip-context-menu button {
+    background-color: transparent;
+    border: none;
+    color: inherit;
+    padding: 8px 12px;
+    text-align: left;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: background-color 0.15s ease;
+    font-size: 14px;
+}
+
+#grip-context-menu button:hover {
+    background-color: var(--button-hover-background);
+}
+
+
+/* --- Status Bar & Command Line --- */
+#status-bar {
+    position: fixed;
+    bottom: 50px; /* Positioned above the command line */
+    left: 0;
+    width: 100%;
+    height: 20px;
+    background-color: var(--toolbar-background);
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Align items to both ends */
+    padding: 0 12px;
+    font-size: 12px;
+    z-index: 200;
+    box-sizing: border-box;
+    border-top: 1px solid var(--grid-line-color-major);
+}
+
+.coord-display {
+    margin-left: 16px;
+    min-width: 100px;
+    font-family: monospace;
+}
+
+#bottom-left-bar {
+    display: flex;
+    gap: 4px;
+}
+
+#command-line {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50px; /* Total height of the command area */
+    background-color: #202021;
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    z-index: 200;
+    border-top: 1px solid var(--grid-line-color-major);
+}
+
+#command-history {
+    flex-grow: 1;
+    padding: 4px 8px;
+    font-size: 13px;
+    overflow-y: auto;
+    font-family: 'Consolas', 'Menlo', monospace;
+    line-height: 1.4;
+}
+
+#command-prompt-wrapper {
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+#command-prompt {
+    font-size: 13px;
+    font-family: 'Consolas', 'Menlo', monospace;
+    margin-right: 6px;
+}
+
+#command-input {
+    flex-grow: 1;
+    background-color: transparent;
+    border: none;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    padding: 2px;
+    outline: none;
+}
+
+/* --- Modal Dialogs --- */
+#modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 800;
+}
+
+#modal-backdrop.hidden {
+    display: none;
+}
+
+.modal-dialog {
+    background-color: var(--toolbar-background);
+    color: var(--text-color);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+    width: 90%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.modal-dialog.hidden {
+    display: none;
+}
+
+.modal-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.modal-content {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.9;
+    line-height: 1.5;
+}
+
+.modal-input {
+    width: 100%;
+    box-sizing: border-box;
+    background-color: var(--background-color);
+    border: 1px solid var(--grid-line-color-major);
+    color: var(--text-color);
+    border-radius: 4px;
+    padding: 8px;
+    font-size: 14px;
+}
+
+.modal-input:focus {
+    outline: none;
+    border-color: var(--selected-stroke-color);
+}
+
+.modal-controls {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.modal-button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.15s ease;
+    background-color: var(--button-active-background);
+    color: white;
+}
+
+.modal-button:hover {
+    opacity: 0.9;
+}
+
+.modal-button.secondary {
+    background-color: var(--button-hover-background);
+    color: var(--text-color);
+}
+
+/* --- Workspace Selection Modal --- */
+#workspace-selection-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    color: var(--text-color);
+}
+
+#workspace-selection-modal.hidden {
+    display: none;
+}
+
+#workspace-selection-modal .dialog-content {
+    background-color: var(--toolbar-background);
+    padding: 32px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    text-align: center;
+    border: 1px solid var(--window-border-color);
+}
+
+#workspace-selection-modal h2 {
+    margin-top: 0;
+    margin-bottom: 24px;
+    font-size: 22px;
+    font-weight: 500;
+}
+
+#workspace-selection-modal .button-container {
+    display: flex;
+    gap: 24px;
+}
+
+.workspace-button {
+    background-color: var(--button-hover-background);
+    border: 1px solid var(--window-border-color);
+    color: var(--text-color);
+    padding: 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 220px;
+    transition: background-color 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+.workspace-button:hover {
+    background-color: var(--grid-line-color-major);
+    transform: translateY(-5px);
+    border-color: var(--selected-stroke-color);
+}
+
+.workspace-button .icon {
+    color: var(--selected-stroke-color);
+}
+
+.workspace-button span {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.workspace-button p {
+    font-size: 13px;
+    margin: 0;
+    opacity: 0.7;
+    line-height: 1.4;
+}

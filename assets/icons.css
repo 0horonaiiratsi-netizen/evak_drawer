@@ -1,0 +1,121 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+*/
+
+.icon {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background-color: currentColor;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+}
+
+/* --- Size Overrides --- */
+.window-icon .icon { width: 16px; height: 16px; }
+#layers-controls .icon { width: 20px; height: 20px; }
+.window-control-button .icon { width: 18px; height: 18px; }
+#delete-button .icon { width: 18px; height: 18px; }
+.workspace-button .icon { width: 48px; height: 48px; color: var(--selected-stroke-color); }
+.layer-item .icon { width: 18px; height: 18px; }
+
+/* --- Icon Definitions --- */
+.icon-select { -webkit-mask-image: url('icons/select.svg'); mask-image: url('icons/select.svg'); }
+.icon-pan { -webkit-mask-image: url('icons/pan.svg'); mask-image: url('icons/pan.svg'); }
+.icon-drawing-tools { -webkit-mask-image: url('icons/drawing-tools.svg'); mask-image: url('icons/drawing-tools.svg'); }
+.icon-modification-tools { -webkit-mask-image: url('icons/modification-tools.svg'); mask-image: url('icons/modification-tools.svg'); }
+.icon-precision-tools { -webkit-mask-image: url('icons/precision-tools.svg'); mask-image: url('icons/precision-tools.svg'); }
+.icon-annotations-tools { -webkit-mask-image: url('icons/annotations-tools.svg'); mask-image: url('icons/annotations-tools.svg'); }
+.icon-file-tools { -webkit-mask-image: url('icons/file-tools.svg'); mask-image: url('icons/file-tools.svg'); }
+.icon-layers { -webkit-mask-image: url('icons/layers.svg'); mask-image: url('icons/layers.svg'); }
+.icon-properties { -webkit-mask-image: url('icons/properties.svg'); mask-image: url('icons/properties.svg'); }
+.icon-style-manager { -webkit-mask-image: url('icons/style-manager.svg'); mask-image: url('icons/style-manager.svg'); }
+.icon-dimension-style-manager { -webkit-mask-image: url('icons/dimension-style-manager.svg'); mask-image: url('icons/dimension-style-manager.svg'); }
+.icon-bug { -webkit-mask-image: url('icons/bug.svg'); mask-image: url('icons/bug.svg'); }
+.icon-undo { -webkit-mask-image: url('icons/undo.svg'); mask-image: url('icons/undo.svg'); }
+.icon-redo { -webkit-mask-image: url('icons/redo.svg'); mask-image: url('icons/redo.svg'); }
+.icon-3d-view { -webkit-mask-image: url('icons/3d-view.svg'); mask-image: url('icons/3d-view.svg'); }
+.icon-sketch { -webkit-mask-image: url('icons/sketch.svg'); mask-image: url('icons/sketch.svg'); }
+.icon-finish-sketch { -webkit-mask-image: url('icons/finish-sketch.svg'); mask-image: url('icons/finish-sketch.svg'); }
+.icon-constraint-horizontal { -webkit-mask-image: url('icons/constraint-horizontal.svg'); mask-image: url('icons/constraint-horizontal.svg'); }
+.icon-constraint-vertical { -webkit-mask-image: url('icons/constraint-vertical.svg'); mask-image: url('icons/constraint-vertical.svg'); }
+.icon-constraint-parallel { -webkit-mask-image: url('icons/constraint-parallel.svg'); mask-image: url('icons/constraint-parallel.svg'); }
+.icon-constraint-perpendicular { -webkit-mask-image: url('icons/constraint-perpendicular.svg'); mask-image: url('icons/constraint-perpendicular.svg'); }
+.icon-constraint-angle { -webkit-mask-image: url('icons/constraint-angle.svg'); mask-image: url('icons/constraint-angle.svg'); }
+.icon-constraint-length { -webkit-mask-image: url('icons/constraint-length.svg'); mask-image: url('icons/constraint-length.svg'); }
+.icon-constraint-tangent { -webkit-mask-image: url('icons/constraint-tangent.svg'); mask-image: url('icons/constraint-tangent.svg'); }
+.icon-wall-exterior { -webkit-mask-image: url('icons/wall-exterior.svg'); mask-image: url('icons/wall-exterior.svg'); }
+.icon-wall-interior { -webkit-mask-image: url('icons/wall-interior.svg'); mask-image: url('icons/wall-interior.svg'); }
+.icon-wall-partition { -webkit-mask-image: url('icons/wall-partition.svg'); mask-image: url('icons/wall-partition.svg'); }
+.icon-door { -webkit-mask-image: url('icons/door.svg'); mask-image: url('icons/door.svg'); }
+.icon-window { -webkit-mask-image: url('icons/window.svg'); mask-image: url('icons/window.svg'); }
+.icon-stairs { -webkit-mask-image: url('icons/stairs.svg'); mask-image: url('icons/stairs.svg'); }
+.icon-evacuation-path { -webkit-mask-image: url('icons/evacuation-path.svg'); mask-image: url('icons/evacuation-path.svg'); }
+.icon-emergency-evacuation-path { -webkit-mask-image: url('icons/emergency-evacuation-path.svg'); mask-image: url('icons/emergency-evacuation-path.svg'); }
+.icon-text { -webkit-mask-image: url('icons/text.svg'); mask-image: url('icons/text.svg'); }
+.icon-polyline { -webkit-mask-image: url('icons/polyline.svg'); mask-image: url('icons/polyline.svg'); }
+.icon-circle { -webkit-mask-image: url('icons/circle.svg'); mask-image: url('icons/circle.svg'); }
+.icon-arc { -webkit-mask-image: url('icons/arc.svg'); mask-image: url('icons/arc.svg'); }
+.icon-hatch { -webkit-mask-image: url('icons/hatch.svg'); mask-image: url('icons/hatch.svg'); }
+.icon-dimlinear { -webkit-mask-image: url('icons/dimlinear.svg'); mask-image: url('icons/dimlinear.svg'); }
+.icon-dimaligned { -webkit-mask-image: url('icons/dimaligned.svg'); mask-image: url('icons/dimaligned.svg'); }
+.icon-create-block { -webkit-mask-image: url('icons/create-block.svg'); mask-image: url('icons/create-block.svg'); }
+.icon-insert-block { -webkit-mask-image: url('icons/insert-block.svg'); mask-image: url('icons/insert-block.svg'); }
+.icon-set-base { -webkit-mask-image: url('icons/set-base.svg'); mask-image: url('icons/set-base.svg'); }
+.icon-save-block { -webkit-mask-image: url('icons/save-block.svg'); mask-image: url('icons/save-block.svg'); }
+.icon-close-editor { -webkit-mask-image: url('icons/close-editor.svg'); mask-image: url('icons/close-editor.svg'); }
+.icon-match-properties { -webkit-mask-image: url('icons/match-properties.svg'); mask-image: url('icons/match-properties.svg'); }
+.icon-trim { -webkit-mask-image: url('icons/trim.svg'); mask-image: url('icons/trim.svg'); }
+.icon-extend { -webkit-mask-image: url('icons/extend.svg'); mask-image: url('icons/extend.svg'); }
+.icon-offset { -webkit-mask-image: url('icons/offset.svg'); mask-image: url('icons/offset.svg'); }
+.icon-mirror { -webkit-mask-image: url('icons/mirror.svg'); mask-image: url('icons/mirror.svg'); }
+.icon-fillet { -webkit-mask-image: url('icons/fillet.svg'); mask-image: url('icons/fillet.svg'); }
+.icon-chamfer { -webkit-mask-image: url('icons/chamfer.svg'); mask-image: url('icons/chamfer.svg'); }
+.icon-extrude { -webkit-mask-image: url('icons/extrude.svg'); mask-image: url('icons/extrude.svg'); }
+.icon-revolve { -webkit-mask-image: url('icons/revolve.svg'); mask-image: url('icons/revolve.svg'); }
+.icon-cut { -webkit-mask-image: url('icons/cut.svg'); mask-image: url('icons/cut.svg'); }
+.icon-sweep { -webkit-mask-image: url('icons/sweep.svg'); mask-image: url('icons/sweep.svg'); }
+.icon-loft { -webkit-mask-image: url('icons/loft.svg'); mask-image: url('icons/loft.svg'); }
+.icon-grid-snap { -webkit-mask-image: url('icons/grid-snap.svg'); mask-image: url('icons/grid-snap.svg'); }
+.icon-ortho-mode { -webkit-mask-image: url('icons/ortho-mode.svg'); mask-image: url('icons/ortho-mode.svg'); }
+.icon-scale-by-ref { -webkit-mask-image: url('icons/scale-by-ref.svg'); mask-image: url('icons/scale-by-ref.svg'); }
+.icon-rotate-by-ref { -webkit-mask-image: url('icons/rotate-by-ref.svg'); mask-image: url('icons/rotate-by-ref.svg'); }
+.icon-pdf-underlay { -webkit-mask-image: url('icons/pdf-underlay.svg'); mask-image: url('icons/pdf-underlay.svg'); }
+.icon-export-png { -webkit-mask-image: url('icons/export-png.svg'); mask-image: url('icons/export-png.svg'); }
+.icon-export-pdf { -webkit-mask-image: url('icons/export-pdf.svg'); mask-image: url('icons/export-pdf.svg'); }
+.icon-ladder { -webkit-mask-image: url('icons/ladder.svg'); mask-image: url('icons/ladder.svg'); }
+.icon-fire-extinguisher { -webkit-mask-image: url('icons/fire-extinguisher.svg'); mask-image: url('icons/fire-extinguisher.svg'); }
+.icon-exit { -webkit-mask-image: url('icons/exit.svg'); mask-image: url('icons/exit.svg'); }
+.icon-first-aid { -webkit-mask-image: url('icons/first-aid.svg'); mask-image: url('icons/first-aid.svg'); }
+.icon-fire-hydrant { -webkit-mask-image: url('icons/fire-hydrant.svg'); mask-image: url('icons/fire-hydrant.svg'); }
+.icon-electrical-panel { -webkit-mask-image: url('icons/electrical-panel.svg'); mask-image: url('icons/electrical-panel.svg'); }
+.icon-column { -webkit-mask-image: url('icons/column.svg'); mask-image: url('icons/column.svg'); }
+.icon-geodetic-point { -webkit-mask-image: url('icons/geodetic-point.svg'); mask-image: url('icons/geodetic-point.svg'); }
+.icon-manhole { -webkit-mask-image: url('icons/manhole.svg'); mask-image: url('icons/manhole.svg'); }
+.icon-power-pole { -webkit-mask-image: url('icons/power-pole.svg'); mask-image: url('icons/power-pole.svg'); }
+.icon-lamppost { -webkit-mask-image: url('icons/lamppost.svg'); mask-image: url('icons/lamppost.svg'); }
+.icon-deciduous-tree { -webkit-mask-image: url('icons/deciduous-tree.svg'); mask-image: url('icons/deciduous-tree.svg'); }
+.icon-coniferous-tree { -webkit-mask-image: url('icons/coniferous-tree.svg'); mask-image: url('icons/coniferous-tree.svg'); }
+.icon-close { -webkit-mask-image: url('icons/close.svg'); mask-image: url('icons/close.svg'); }
+.icon-add { -webkit-mask-image: url('icons/add.svg'); mask-image: url('icons/add.svg'); }
+.icon-delete { -webkit-mask-image: url('icons/delete.svg'); mask-image: url('icons/delete.svg'); }
+.icon-move-up { -webkit-mask-image: url('icons/move-up.svg'); mask-image: url('icons/move-up.svg'); }
+.icon-move-down { -webkit-mask-image: url('icons/move-down.svg'); mask-image: url('icons/move-down.svg'); }
+.icon-visibility-on { -webkit-mask-image: url('icons/visibility-on.svg'); mask-image: url('icons/visibility-on.svg'); }
+.icon-visibility-off { -webkit-mask-image: url('icons/visibility-off.svg'); mask-image: url('icons/visibility-off.svg'); }
+.icon-lock { -webkit-mask-image: url('icons/lock.svg'); mask-image: url('icons/lock.svg'); }
+.icon-unlock { -webkit-mask-image: url('icons/unlock.svg'); mask-image: url('icons/unlock.svg'); }
+.icon-object-snap { -webkit-mask-image: url('icons/object-snap.svg'); mask-image: url('icons/object-snap.svg'); }
+.icon-snap-endpoint { -webkit-mask-image: url('icons/snap-endpoint.svg'); mask-image: url('icons/snap-endpoint.svg'); }
+.icon-snap-midpoint { -webkit-mask-image: url('icons/snap-midpoint.svg'); mask-image: url('icons/snap-midpoint.svg'); }
+.icon-snap-center { -webkit-mask-image: url('icons/snap-center.svg'); mask-image: url('icons/snap-center.svg'); }
+.icon-snap-intersection { -webkit-mask-image: url('icons/snap-intersection.svg'); mask-image: url('icons/snap-intersection.svg'); }
+.icon-snap-perpendicular { -webkit-mask-image: url('icons/snap-perpendicular.svg'); mask-image: url('icons/snap-perpendicular.svg'); }
+.icon-snap-quadrant { -webkit-mask-image: url('icons/snap-quadrant.svg'); mask-image: url('icons/snap-quadrant.svg'); }
+.icon-snap-tangent { -webkit-mask-image: url('icons/snap-tangent.svg'); mask-image: url('icons/snap-tangent.svg'); }
+.icon-snap-nearest { -webkit-mask-image: url('icons/snap-nearest.svg'); mask-image: url('icons/snap-nearest.svg'); }
