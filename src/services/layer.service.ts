@@ -157,6 +157,14 @@ export class LayerService {
     public getLayerForObject(objectId: number): Layer | undefined {
         return this._layers.find(layer => layer.objectIds.includes(objectId));
     }
+
+    public getLayer(name: string): Layer | undefined {
+        return this._layers.find(layer => layer.name === name);
+    }
+
+    public get defaultLayer(): Layer {
+        return this._layers[0] || new Layer(0, '0');
+    }
     
     public moveActiveLayerForward(recordHistory: boolean = true): void {
         const index = this._layers.findIndex(l => l.id === this.activeLayerId);

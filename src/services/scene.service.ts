@@ -11,10 +11,12 @@ import { Wall } from '../scene/wall';
 import { CutObject } from '../scene/cut-object';
 import { SweepObject } from '../scene/sweep-object';
 import { LoftObject } from '../scene/loft-object';
+import { BlockDefinition } from '../scene/block-definition';
 
 export class SceneService {
     private app: App;
     private sceneObjects: SceneObject[] = [];
+    private blockDefinitions: BlockDefinition[] = [];
     private nextObjectId: number = 1;
 
     constructor(app: App) {
@@ -23,6 +25,10 @@ export class SceneService {
 
     public get objects(): readonly SceneObject[] {
         return this.sceneObjects;
+    }
+
+    public getBlockDefinitions(): BlockDefinition[] {
+        return this.blockDefinitions;
     }
 
     public getNextId(): number {
@@ -35,6 +41,10 @@ export class SceneService {
 
     public add(obj: SceneObject): void {
         this.sceneObjects.push(obj);
+    }
+
+    public addBlockDefinition(block: BlockDefinition): void {
+        this.blockDefinitions.push(block);
     }
     
     public removeById(id: number): boolean {
@@ -57,6 +67,7 @@ export class SceneService {
     
     public clear(): void {
         this.sceneObjects = [];
+        this.blockDefinitions = [];
         this.nextObjectId = 1;
     }
     

@@ -21,10 +21,14 @@ export class BlockDefinition {
      * @param basePoint The origin point of the block's internal coordinate system.
      * @param objects An array of SceneObjects that make up the block's geometry.
      */
-    constructor(name: string, basePoint: Point, objects: SceneObject[]) {
+    constructor(name: string, basePoint: Point = new Point(0, 0), objects: SceneObject[] = []) {
         this.name = name;
         this.basePoint = basePoint;
         this.objects = objects;
+    }
+
+    addObject(obj: SceneObject): void {
+        this.objects.push(obj);
     }
 
     /**
