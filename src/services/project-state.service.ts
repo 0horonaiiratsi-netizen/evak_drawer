@@ -8,14 +8,15 @@ import { BlockDefinition } from '../scene/block-definition';
 import { objectFactory } from '../scene/factory';
 import { SceneObject } from '../scene/scene-object';
 import { Layer } from '../layer';
-import { HistoryObserver } from '../controllers/interfaces';
+import { HistoryObserver, SceneObserver } from '../controllers/interfaces';
 
 export class ProjectStateService {
     private app: App;
     private historyManager: HistoryManager;
     private clipboard: string | null = null;
     public blockDefinitions: Map<string, BlockDefinition> = new Map();
-    private observers: HistoryObserver[] = [];
+    private historyObservers: HistoryObserver[] = [];
+    private sceneObservers: SceneObserver[] = [];
 
     constructor(app: App) {
         this.app = app;
@@ -23,28 +24,41 @@ export class ProjectStateService {
     }
 
     public subscribe(observer: HistoryObserver): void {
-        if (!this.observers.includes(observer)) {
-            this.observers.push(observer);
+        if (!this.historyObservers.includes(observer)) {
+            this.historyObservers.push(observer);
+        }
+    }
+
+    public subscribeScene(observer: SceneObserver): void {
+        if (!this.sceneObservers.includes(observer)) {
+            this.sceneObservers.push(observer);
         }
     }
 
     private notifyHistoryChange(): void {
-        this.observers.forEach(observer => observer.onHistoryChanged());
+        this.historyObservers.forEach(observer => observer.onHistoryChanged());
+    }
+
+    private notifySceneChange(): void {
+        this.sceneObservers.forEach(observer => observer.onSceneChanged());
     }
 
     public commit(action: string): void {
         this.historyManager.addState(action);
         this.notifyHistoryChange();
+        this.notifySceneChange();
     }
 
     public undo(): void {
         this.historyManager.undo();
         this.notifyHistoryChange();
+        this.notifySceneChange();
     }
 
     public redo(): void {
         this.historyManager.redo();
         this.notifyHistoryChange();
+        this.notifySceneChange();
     }
 
     public canUndo(): boolean { return this.historyManager.canUndo(); }
@@ -154,6 +168,7 @@ export class ProjectStateService {
             this.app.dimensionStyleManagerController.render();
             this.app.selectionService.set([]);
             this.app.draw();
+            this.notifySceneChange();
         } catch (error) {
             console.error("Failed to load state:", error);
             this.app.dialogController.alert("Помилка завантаження", "Не вдалося завантажити стан. Файл може бути пошкодженим або мати невірний формат.");

@@ -18,3 +18,10 @@ export interface SelectionObserver {
 export interface HistoryObserver {
     onHistoryChanged(): void;
 }
+
+/**
+ * An interface for objects that need to be notified when the scene changes.
+ */
+export interface SceneObserver {
+    onSceneChanged(): void;
+}

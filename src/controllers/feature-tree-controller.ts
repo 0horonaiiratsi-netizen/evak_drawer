@@ -1,64 +1,54 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
+import { SceneObject } from '../scene/scene-object';
+import { App } from '../app';
+import { SceneObserver, SelectionObserver } from './interfaces';
 
-import { App } from "../app";
-import { HistoryManager } from "../history-manager";
-
-export class FeatureTreeController {
+export class FeatureTreeController implements SceneObserver, SelectionObserver {
     private app: App;
-    private panelElement: HTMLElement | null = null;
-    private featureList: HTMLElement | null = null;
-    private refreshButton: HTMLElement | null = null;
+    private container: HTMLElement;
 
-    constructor(app: App) {
+    constructor(app: App, containerId: string) {
         this.app = app;
-        this.init();
+        this.container = document.getElementById(containerId)!;
+        this.app.projectStateService.subscribeScene(this);
+        this.app.selectionService.subscribe(this);
+        this.rebuildTree();
     }
 
-    private init(): void {
-        this.panelElement = document.getElementById('feature-tree-panel');
-        if (!this.panelElement) return;
-
-        this.featureList = this.panelElement.querySelector('#feature-tree-list') as HTMLElement;
-        this.refreshButton = this.panelElement.querySelector('#feature-tree-refresh') as HTMLElement;
-
-        if (this.refreshButton) {
-            this.refreshButton.addEventListener('click', () => this.refreshTree());
-        }
-
-        this.refreshTree();
+    onSceneChanged(): void {
+        this.rebuildTree();
     }
 
-    private refreshTree(): void {
-        if (!this.featureList) return;
-
-        this.featureList.innerHTML = '';
-
-        // Отримати історію з projectStateService (оскільки historyManager не експортується)
-        // Для простоти, використовуємо placeholder, бо historyManager приватний
-        const history = [
-            { description: 'New Project' },
-            { description: 'Add Sketch' },
-            { description: 'Extrude Sketch' },
-            { description: 'Apply Fillet' },
-        ];
-        history.forEach((entry, index) => {
-            const li = document.createElement('li');
-            li.className = 'feature-tree-item';
-            li.textContent = `${index + 1}. ${entry.description}`;
-            li.addEventListener('click', () => this.onFeatureClick(index));
-            this.featureList!.appendChild(li);
+    onSelectionChanged(selectedObjects: SceneObject[]): void {
+        const selectedIds = new Set(selectedObjects.map(obj => obj.id));
+        const elements = this.container.querySelectorAll('.feature-tree-element');
+        elements.forEach(el => {
+            const element = el as HTMLElement;
+            const objId = parseInt(element.dataset.objId!, 10);
+            if (selectedIds.has(objId)) {
+                element.classList.add('selected');
+            } else {
+                element.classList.remove('selected');
+            }
         });
     }
 
-    private onFeatureClick(index: number): void {
-        // Можна додати логіку для редагування фічі
-        console.log(`Feature clicked: ${index}`);
+    private rebuildTree(): void {
+        this.container.innerHTML = '';
+        const objects = this.app.sceneService.objects;
+        objects.forEach(obj => {
+            const element = this.createTreeElement(obj);
+            this.container.appendChild(element);
+        });
     }
 
-    public updateTree(): void {
-        this.refreshTree();
+    private createTreeElement(obj: SceneObject): HTMLElement {
+        const element = document.createElement('div');
+        element.classList.add('feature-tree-element');
+        element.textContent = `${obj.constructor.name} (${obj.id})`;
+        element.dataset.objId = obj.id.toString();
+        element.addEventListener('click', () => {
+            this.app.selectionService.setSingle(obj.id);
+        });
+        return element;
     }
 }
