@@ -77,6 +77,9 @@ import { LogViewerController } from './log-viewer-controller';
 import { objectFactory } from './scene/factory';
 // FIX: Import `TextStyle` for use in new style management methods.
 import { TextStyle } from './styles/text-style';
+import { DxfImportService } from './services/dxf-import-service';
+import { DxfExportService } from './services/dxf-export-service';
+import { StlExportService } from './services/stl-export-service';
 
 declare const pdfjsLib: any;
 
@@ -286,6 +289,9 @@ export class App {
                     case 'new-project': this.newProject(); break;
                     case 'export-png': this.exportAsPNG(); break;
                     case 'export-pdf': this.exportAsPDF(); break;
+                    case 'export-dxf': this.exportAsDXF(); break;
+                    case 'export-stl': this.exportAsSTL(); break;
+                    case 'import-dxf': this.importDXF(payload); break;
                     case 'undo': this.projectStateService.undo(); break;
                     case 'redo': this.projectStateService.redo(); break;
                     case 'copy': this.projectStateService.copySelection(); break;
@@ -480,6 +486,27 @@ export class App {
     }
 
     exportAsPDF(): void { this.canvasController.exportAsPDF(); }
+
+    exportAsDXF(): void {
+        const objects = [...this.sceneService.objects];
+        const dxfContent = DxfExportService.exportDxf(objects);
+        // TODO: Save to file using electronAPI
+        console.log('DXF Export:', dxfContent);
+    }
+
+    exportAsSTL(): void {
+        const objects = [...this.sceneService.objects];
+        const stlContent = StlExportService.exportStl(objects, this);
+        // TODO: Save to file using electronAPI
+        console.log('STL Export:', stlContent);
+    }
+
+    async importDXF(filePath: string): Promise<void> {
+        // TODO: Read file content using electronAPI
+        const content = ''; // Placeholder
+        const objects = await DxfImportService.importDxf(content);
+        objects.forEach(obj => this.addSceneObject(obj));
+    }
 
     duplicateSelection(): void {
         if (this.selectionService.selectedIds.length === 0) return;

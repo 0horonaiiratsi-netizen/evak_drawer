@@ -37,6 +37,9 @@
     }
   },
   "dependencies": {
-    "cassowary": "^0.0.2"
+    "cassowary": "^0.0.2",
+    "dxf-parser": "^1.1.2",
+    "dxf-writer": "^1.18.4",
+    "stl": "^1.1.1"
   }
 }
