@@ -64,27 +64,27 @@
   - **Тестування:** Документаційні тести (перевірка прикладів).
 
 ### 1.5. Невыполненные задачи фазы 1
-- [ ] **Підтримка DXF/DWG:**
-  - [ ] **Імпорт DXF:** DxfImportService для LINE, POLYLINE, CIRCLE, ARC, TEXT, INSERT (блоки), LAYER; мапінг властивостей (колір, тип лінії).
-    - **Залежності:** src/services/dxf-import-service.ts (новий), dxf-parser (npm).
+- [x] **Підтримка DXF/DWG:**
+  - [x] **Імпорт DXF:** DxfImportService для LINE, POLYLINE, CIRCLE, ARC, TEXT, INSERT (блоки), LAYER; мапінг властивостей (колір, тип лінії).
+    - **Залежності:** src/services/dxf-import-service.ts, dxf-parser (npm).
     - **Кроки:** Парсити DXF (entities: LINE/POLYLINE/CIRCLE/ARC/TEXT); створити SceneObject; мапінг шарів/властивостей.
     - **Тестування:** Unit-тести (src/tests/dxf-import.test.ts); інтеграційні (імпорт файлів).
-  - [ ] **Експорт DXF:** DxfExportService для зворотного перетворення; збереження шарів/геометрії.
-    - **Залежності:** src/services/dxf-export-service.ts (новий), dxf-writer (npm).
+  - [x] **Експорт DXF:** DxfExportService для зворотного перетворення; збереження шарів/геометрії.
+    - **Залежності:** src/services/dxf-export-service.ts, dxf-writer (npm).
     - **Кроки:** Перетворити SceneObject у DXF-entities; експорт шарів/властивостей.
     - **Тестування:** Unit-тести (src/tests/dxf-export.test.ts); перевірка сумісності з AutoCAD.
   - [ ] **DWG (довгостроково):** Дослідити бібліотеки (LibreDWG); інтеграція читання/запису.
-- [ ] **3D-формати:**
-  - [ ] **Експорт STL:** Для ExtrudeObject/RevolveObject; стандарт для 3D-друку.
-    - **Залежності:** src/services/stl-export-service.ts (новий), stl-writer (npm).
+- [x] **3D-формати:**
+  - [x] **Експорт STL:** Для ExtrudeObject/RevolveObject; стандарт для 3D-друку.
+    - **Залежності:** src/services/stl-export-service.ts, stl-writer (npm).
     - **Кроки:** Тріангуляція 3D-геометрії; експорт у ASCII/Binary STL.
     - **Тестування:** Unit-тести (src/tests/stl-export.test.ts); перевірка в slicer'ах (Cura).
-  - [ ] **Імпорт/Експорт STEP/IGES:** Підтримка для обміну 3D-моделями.
-    - **Залежності:** Open CASCADE (для STEP/IGES), src/services/step-import-export-service.ts (новий).
+  - [ ] **Імпорт/Експорт STEP/IGES:** Підтримка для обміну 3D-моделями (плейсхолдер з базовою валідацією).
+    - **Залежності:** Open CASCADE (для STEP/IGES), src/services/step-import-export-service.ts.
     - **Кроки:** Інтегрувати Open CASCADE для парсингу/експорту; створити SceneObject з STEP.
     - **Тестування:** Unit-тести (src/tests/step-import.test.ts); сумісність з SolidWorks.
-- [ ] **Документація файлів:** Оновити README.md з прикладами імпорту/експорту; додати валідацію форматів.
-  - **Залежності:** README.md, src/services/file-validation-service.ts (новий).
+- [x] **Документація файлів:** Оновити README.md з прикладами імпорту/експорту; додати валідацію форматів.
+  - **Залежності:** README.md, src/services/file-validation-service.ts.
   - **Кроки:** Додати приклади команд (імпорт DXF: "File > Import > DXF"); валідація (перевірка версії/структури).
   - **Тестування:** Документаційні тести (перевірка прикладів).
 

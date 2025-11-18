@@ -125,6 +125,8 @@ export class ArcObject implements SceneObject {
             { object: this, type: GripType.STRETCH, point: this.getStartPoint(), metadata: { pointIndex: 0 } },
             { object: this, type: GripType.STRETCH, point: this.getMidPoint(), metadata: { pointIndex: 1 } },
             { object: this, type: GripType.STRETCH, point: this.getEndPoint(), metadata: { pointIndex: 2 } },
+            { object: this, type: GripType.ROTATE, point: { x: this.center.x, y: this.center.y - this.radius - 10 }, metadata: { center: this.center, isReference: true } },
+            { object: this, type: GripType.SCALE, point: { x: this.center.x + this.radius + 10, y: this.center.y }, metadata: { center: this.center, isReference: true } },
         ];
     }
 

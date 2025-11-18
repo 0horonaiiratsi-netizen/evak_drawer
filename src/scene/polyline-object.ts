@@ -115,6 +115,9 @@ export class PolylineObject implements SceneObject {
         this.points.forEach((p, i) => {
             grips.push({ object: this, type: GripType.STRETCH, point: p, metadata: { pointIndex: i } });
         });
+        const center = this.getCenter(app);
+        grips.push({ object: this, type: GripType.ROTATE, point: { x: center.x, y: center.y - 20 }, metadata: { center: center, isReference: true } });
+        grips.push({ object: this, type: GripType.SCALE, point: { x: center.x + 20, y: center.y }, metadata: { center: center, isReference: true } });
         return grips;
     }
 

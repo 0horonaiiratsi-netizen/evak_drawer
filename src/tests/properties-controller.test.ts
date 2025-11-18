@@ -101,24 +101,38 @@ describe('PropertiesController', () => {
     });
 
     it('should handle GroupObject single selection', () => {
-      const mockGroup = {
-        id: 'group1',
-        objects: [{ id: 'obj1' } as unknown as SceneObject, { id: 'obj2' } as unknown as SceneObject],
+      const mockObj1 = {
+        id: 1,
         getBoundingBox: vi.fn(() => ({ minX: 0, minY: 0, maxX: 10, maxY: 10 })),
         getCenter: vi.fn(() => ({ x: 5, y: 5 }))
-      } as unknown as GroupObject;
+      } as unknown as SceneObject;
+      const mockObj2 = {
+        id: 2,
+        getBoundingBox: vi.fn(() => ({ minX: 10, minY: 10, maxX: 20, maxY: 20 })),
+        getCenter: vi.fn(() => ({ x: 15, y: 15 }))
+      } as unknown as SceneObject;
+      const mockGroup = new GroupObject(1, [mockObj1, mockObj2]);
       controller.onSelectionChanged([mockGroup]);
       expect(mockI18n.t).toHaveBeenCalledWith('properties.groupSelected', 2);
     });
 
     it('should handle multiple GroupObjects', () => {
-      const mockGroups = [{ objects: [{}] } as GroupObject, { objects: [{}] } as GroupObject];
-      controller.onSelectionChanged(mockGroups);
-      expect(mockI18n.t).toHaveBeenCalledWith('properties.groupSelected', 2);
+      const mockObj1 = { id: 1 } as SceneObject;
+      const mockObj2 = { id: 2 } as SceneObject;
+      const mockGroup1 = new GroupObject(1, [mockObj1]);
+      const mockGroup2 = new GroupObject(2, [mockObj2]);
+      controller.onSelectionChanged([mockGroup1, mockGroup2]);
+      expect(mockI18n.t).toHaveBeenCalledWith('properties.multipleSelected', 2);
     });
 
     it('should show dimension properties for DimensionObject', () => {
-      const mockDimension = { styleName: 'Standard', textOverride: '10m' } as DimensionObject;
+      const mockDimension = {
+        styleName: 'Standard',
+        textOverride: '10m',
+        id: 1,
+        getBoundingBox: vi.fn(() => ({ minX: 0, minY: 0, maxX: 10, maxY: 10 })),
+        getCenter: vi.fn(() => ({ x: 5, y: 5 })),
+      } as unknown as DimensionObject;
       controller.onSelectionChanged([mockDimension]);
       // Verify styleSelect population and value setting (requires deeper DOM mock)
     });
@@ -127,7 +141,8 @@ describe('PropertiesController', () => {
   describe('initListeners', () => {
     it('should initialize listeners for inputs', () => {
       // Test that listeners are added (can spy on addEventListener)
-      const spy = vi.spyOn(HTMLInputElement.prototype, 'addEventListener');
+      const mockInput = (controller as any).inputs.objectX;
+      const spy = vi.spyOn(mockInput, 'addEventListener');
       controller['initListeners']();
       expect(spy).toHaveBeenCalled();
     });
@@ -136,13 +151,14 @@ describe('PropertiesController', () => {
   describe('handleSelectSameLayer', () => {
     it('should select objects on the same layer', () => {
       const mockLayer = { id: 'layer1' };
-      mockApp.layerService.getLayerForObject.mockReturnValue(mockLayer);
-      mockApp.sceneService.objects = [{ id: 'obj1' }, { id: 'obj2' }];
+      mockApp.selectedObjectIds = [1];
+      mockApp.sceneService.objects = [{ id: 1 } as SceneObject, { id: 2 } as SceneObject];
+      mockApp.layerService.getLayerForObject.mockReturnValueOnce(mockLayer);
       mockApp.layerService.getLayerForObject.mockImplementation(id => ({ id: 'layer1' }));
 
       controller['handleSelectSameLayer']();
 
-      expect(mockApp.setSelectedObjectIds).toHaveBeenCalledWith(['obj1', 'obj2']);
+      expect(mockApp.setSelectedObjectIds).toHaveBeenCalledWith([1, 2]);
     });
   });
 });

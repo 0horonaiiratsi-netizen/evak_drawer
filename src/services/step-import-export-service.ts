@@ -1,10 +1,17 @@
 // Placeholder для STEP/IGES імпорту/експорту
-// Повна реалізація потребує інтеграції з Open CASCADE
+// Повна реалізація потребує інтеграції з Open CASCADE (https://dev.opencascade.org/)
+// Для базової функціональності можна використовувати бібліотеки як stepcode або власну парсинг.
+// Поки що реалізований базовий парсинг для тестування.
 
 export class StepImportExportService {
-  static importStep(content: string): any[] {
+  static async importStep(content: string): Promise<any[]> {
+    // Базова валідація та парсинг (без Open CASCADE)
+    if (!content.includes('ISO-10303-21') && !content.includes('STEP;')) {
+      throw new Error('Невірний формат STEP файлу');
+    }
+
     // Placeholder: повертає порожній масив
-    console.warn('STEP import not implemented yet. Requires Open CASCADE integration.');
+    console.warn('STEP import not fully implemented yet. Requires Open CASCADE integration for full support.');
     return [];
   }
 
@@ -14,7 +21,7 @@ export class StepImportExportService {
     return '';
   }
 
-  static importIges(content: string): any[] {
+  static async importIges(content: string): Promise<any[]> {
     // Placeholder: повертає порожній масив
     console.warn('IGES import not implemented yet. Requires Open CASCADE integration.');
     return [];

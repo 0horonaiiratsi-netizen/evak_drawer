@@ -26,8 +26,8 @@ import { LayersController } from './layers-controller';
 import { WindowManager } from './window-manager';
 import { StairsTool } from './tools/stairs-tool';
 import { StairsObject, StairsType } from './scene/stairs-object';
-import { ScaleByReferenceTool } from './tools/scale-by-reference-tool';
-import { RotateByReferenceTool } from './tools/rotate-by-reference-tool';
+import { ScaleTool } from './tools/scale-tool';
+import { RotateTool } from './tools/rotate-tool';
 import { DialogController } from './dialog-controller';
 import { CoordinateInputController } from './coordinate-input-controller';
 import { StatusBarController } from './status-bar-controller';
@@ -95,6 +95,8 @@ declare global {
         showPrompt: (options: { title: string; message: string; defaultValue: string; }) => Promise<{ canceled: boolean; value: string | null; }>;
         setProgressBar: (progress: number) => void;
         showNotification: (options: { title: string; body: string; }) => void;
+        readFile: (path: string) => Promise<string>;
+        saveFile: (options: { defaultPath: string; content: string; }) => Promise<{ canceled: boolean; path?: string }>;
       }
     }
 }
@@ -235,7 +237,7 @@ export class App {
             [ToolType.WINDOW, new WindowTool(this)], [ToolType.STAIRS, new StairsTool(this)],
             [ToolType.TEXT, new TextTool(this)], [ToolType.EVACUATION_PATH, new EvacuationPathTool(this)],
             [ToolType.EMERGENCY_EVACUATION_PATH, new EmergencyEvacuationPathTool(this)],
-            [ToolType.SCALE_BY_REFERENCE, new ScaleByReferenceTool(this)], [ToolType.ROTATE_BY_REFERENCE, new RotateByReferenceTool(this)],
+            [ToolType.SCALE_BY_REFERENCE, new ScaleTool(this)], [ToolType.ROTATE_BY_REFERENCE, new RotateTool(this)],
             [ToolType.POLYLINE, new PolylineTool(this)], [ToolType.CIRCLE, new CircleTool(this)],
             [ToolType.ARC, new ArcTool(this)], [ToolType.HATCH, new HatchTool(this)],
             [ToolType.SKETCH, new SketchTool(this)],
@@ -487,25 +489,77 @@ export class App {
 
     exportAsPDF(): void { this.canvasController.exportAsPDF(); }
 
+    private async exportWithSave(content: string, defaultName: string, fileType: string): Promise<void> {
+        if (window.electronAPI && window.electronAPI.saveFile) {
+            try {
+                const result = await window.electronAPI.saveFile({
+                    defaultPath: defaultName,
+                    content: content
+                });
+                if (!result.canceled && result.path) {
+                    this.dialogController.alert(this.i18n.t('dialog.success'), `${fileType} збережено як ${result.path}`);
+                }
+            } catch (error) {
+                console.error('Помилка збереження файлу:', error);
+                this.dialogController.alert(this.i18n.t('dialog.error'), this.i18n.t('dialog.saveError'));
+            }
+        } else {
+            // Fallback для веб: завантаження через браузер
+            const blob = new Blob([content], { type: 'application/octet-stream' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = defaultName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            this.showNotification({ title: this.i18n.t('dialog.success'), body: `${fileType} завантажено` });
+        }
+    }
+
+    private async importWithValidation(filePath: string, validateFn: (content: string) => { isValid: boolean; errors: string[] }, importFn: (content: string) => Promise<any[]>): Promise<void> {
+        if (!window.electronAPI || !window.electronAPI.readFile) {
+            this.dialogController.alert(this.i18n.t('dialog.error'), this.i18n.t('dialog.electronRequired'));
+            return;
+        }
+
+        try {
+            const content = await window.electronAPI.readFile(filePath);
+            const validation = validateFn(content);
+            if (!validation.isValid) {
+                this.dialogController.alert(this.i18n.t('dialog.validationError'), validation.errors.join('\n'));
+                return;
+            }
+
+            const objects = await importFn(content);
+            objects.forEach(obj => this.addSceneObject(obj));
+            this.projectStateService.commit(`Імпорт ${objects.length} об'єктів`);
+            this.showNotification({ title: this.i18n.t('dialog.success'), body: `Імпортовано ${objects.length} об'єктів` });
+        } catch (error) {
+            console.error('Помилка імпорту:', error);
+            this.dialogController.alert(this.i18n.t('dialog.error'), this.i18n.t('dialog.importError'));
+        }
+    }
+
     exportAsDXF(): void {
         const objects = [...this.sceneService.objects];
         const dxfContent = DxfExportService.exportDxf(objects);
-        // TODO: Save to file using electronAPI
-        console.log('DXF Export:', dxfContent);
+        this.exportWithSave(dxfContent, 'export.dxf', 'DXF');
     }
 
     exportAsSTL(): void {
         const objects = [...this.sceneService.objects];
         const stlContent = StlExportService.exportStl(objects, this);
-        // TODO: Save to file using electronAPI
-        console.log('STL Export:', stlContent);
+        this.exportWithSave(stlContent, 'export.stl', 'STL');
     }
 
     async importDXF(filePath: string): Promise<void> {
-        // TODO: Read file content using electronAPI
-        const content = ''; // Placeholder
-        const objects = await DxfImportService.importDxf(content);
-        objects.forEach(obj => this.addSceneObject(obj));
+        this.importWithValidation(
+            filePath,
+            FileValidationService.validateDxf,
+            DxfImportService.importDxf
+        );
     }
 
     duplicateSelection(): void {
@@ -612,6 +666,33 @@ export class App {
             this.projectStateService.commit(`Create text style "${newStyle.name}"`);
             this.styleManagerController.render();
         }
+    }
+
+    private showNotification(options: { title: string; body: string }): void {
+        if (window.electronAPI && window.electronAPI.showNotification) {
+            window.electronAPI.showNotification(options);
+        } else {
+            console.log(`${options.title}: ${options.body}`);
+        }
+    }
+
+    // Placeholder для STEP (повна реалізація потребує Open CASCADE)
+    exportAsSTEP(): void {
+        const objects = [...this.sceneService.objects];
+        const stepContent = StepImportExportService.exportStep(objects);
+        if (stepContent) {
+            this.exportWithSave(stepContent, 'export.step', 'STEP');
+        } else {
+            this.dialogController.alert(this.i18n.t('dialog.error'), 'STEP експорт не реалізований. Потребує Open CASCADE.');
+        }
+    }
+
+    async importSTEP(filePath: string): Promise<void> {
+        this.importWithValidation(
+            filePath,
+            FileValidationService.validateStep,
+            StepImportExportService.importStep
+        );
     }
 
     public deleteTextStyle(name: string): void {

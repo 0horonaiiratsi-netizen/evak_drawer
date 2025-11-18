@@ -15,7 +15,8 @@ export class ScaleByReferenceTool extends Tool {
     private basePoint: Point | null = null;
     private referencePoint: Point | null = null;
     private activeSnap: SnapResult | null = null;
-    
+    private initialGrip: any = null; // Grip that activated this tool
+
     constructor(app: App) {
         super(app, ToolType.SCALE_BY_REFERENCE);
     }
@@ -27,10 +28,21 @@ export class ScaleByReferenceTool extends Tool {
             this.resetAndSwitchToSelect();
             return;
         }
-        await this.app.dialogController.alert(
-            "Масштабування за опорним відрізком",
-            "1. Клацніть, щоб задати базову точку масштабування.\n2. Клацніть, щоб задати опорну точку (поточна довжина).\n3. Клацніть, щоб задати цільову точку (нова довжина)."
-        );
+        if (!this.initialGrip) {
+            await this.app.dialogController.alert(
+                "Масштабування за опорним відрізком",
+                "1. Клацніть, щоб задати базову точку масштабування.\n2. Клацніть, щоб задати опорну точку (поточна довжина).\n3. Клацніть, щоб задати цільову точку (нова довжина)."
+            );
+        }
+    }
+
+    activateFromGrip(grip: any): void {
+        this.initialGrip = grip;
+        this.reset();
+        // Set base point to the grip's center or point
+        this.basePoint = grip.metadata?.center || grip.point;
+        this.step = 1; // Skip base point selection, go to reference point
+        this.app.commandLineController.setPrompt("Виберіть опорну точку для масштабування");
     }
 
     private getSnappedPoint(point: Point): Point {
@@ -93,7 +105,8 @@ export class ScaleByReferenceTool extends Tool {
                 const scaleFactor = targetLength / currentLength;
 
                 selectedObject.scale(scaleFactor, this.basePoint, this.app);
-                this.app.projectStateService.commit("Scale object by visual reference");
+                const commitMessage = this.initialGrip ? "Scale object from grip by visual reference" : "Scale object by visual reference";
+                this.app.projectStateService.commit(commitMessage);
                 this.app.propertiesController.show([selectedObject]);
                 this.app.draw();
                 this.resetAndSwitchToSelect();

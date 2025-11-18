@@ -157,69 +157,89 @@ export class DxfImportService {
     const layer = layerService.getLayer(entity.layer) || layerService.defaultLayer;
     let obj = null;
 
-    switch (entity.type) {
-      case 'LINE':
-        obj = new LineObject(
-          0, // ID буде встановлено пізніше
-          { x: entity.start.x, y: entity.start.y },
-          { x: entity.end.x, y: entity.end.y }
-        );
-        break;
-      case 'POLYLINE':
-      case 'LWPOLYLINE':
-        const points = entity.vertices.map(
-          (v: any) => ({ x: v.x, y: v.y })
-        );
-        obj = new PolylineObject(0, points);
-        if (entity.closed || entity.shape) {
-          (obj as PolylineObject).isClosed = true;
-        }
-        break;
-      case 'CIRCLE':
-        obj = new CircleObject(
-          0,
-          { x: entity.center.x, y: entity.center.y },
-          entity.radius
-        );
-        break;
-      case 'ARC':
-        // DXF куті в градусах, припустимо ArcObject приймає градуси
-        obj = new ArcObject(
-          0,
-          { x: entity.center.x, y: entity.center.y },
-          entity.radius,
-          entity.startAngle,
-          entity.endAngle,
-          false
-        );
-        break;
-      case 'SPLINE':
-        const controlPoints = entity.controlPoints.map(
-          (p: any) => ({ x: p.x, y: p.y })
-        );
-        obj = new SplineObject(0, controlPoints, entity.degree, entity.knots);
-        break;
-      case 'TEXT':
-        obj = new TextObject(
-          0,
-          entity.insertionPoint.x,
-          entity.insertionPoint.y,
-          entity.text,
-          'Standard'
-        );
-        obj.height = entity.textHeight || 24;
-        obj.angle = entity.rotation || 0;
-        break;
-      case 'INSERT':
-        const pos = { x: entity.insertionPoint.x, y: entity.insertionPoint.y };
-        obj = new InsertObject(
-          0,
-          entity.name,
-          pos
-        );
-        obj.insertScale = { x: entity.scaleX || 1, y: entity.scaleY || 1 };
-        obj.rotation = entity.rotation || 0;
-        break;
+    try {
+      switch (entity.type) {
+        case 'LINE':
+          if (entity.start && entity.end) {
+            obj = new LineObject(
+              0, // ID буде встановлено пізніше
+              { x: entity.start.x || 0, y: entity.start.y || 0 },
+              { x: entity.end.x || 0, y: entity.end.y || 0 }
+            );
+          }
+          break;
+        case 'POLYLINE':
+        case 'LWPOLYLINE':
+          if (entity.vertices && Array.isArray(entity.vertices)) {
+            const points = entity.vertices.map(
+              (v: any) => ({ x: v.x || 0, y: v.y || 0 })
+            );
+            obj = new PolylineObject(0, points);
+            if (entity.closed || entity.shape) {
+              (obj as PolylineObject).isClosed = true;
+            }
+          }
+          break;
+        case 'CIRCLE':
+          if (entity.center && typeof entity.radius === 'number') {
+            obj = new CircleObject(
+              0,
+              { x: entity.center.x || 0, y: entity.center.y || 0 },
+              entity.radius
+            );
+          }
+          break;
+        case 'ARC':
+          if (entity.center && typeof entity.radius === 'number' &&
+              typeof entity.startAngle === 'number' && typeof entity.endAngle === 'number') {
+            // DXF куті в градусах, припустимо ArcObject приймає градуси
+            obj = new ArcObject(
+              0,
+              { x: entity.center.x || 0, y: entity.center.y || 0 },
+              entity.radius,
+              entity.startAngle,
+              entity.endAngle,
+              false
+            );
+          }
+          break;
+        case 'SPLINE':
+          if (entity.controlPoints && Array.isArray(entity.controlPoints)) {
+            const controlPoints = entity.controlPoints.map(
+              (p: any) => ({ x: p.x || 0, y: p.y || 0 })
+            );
+            obj = new SplineObject(0, controlPoints, entity.degree || 3, entity.knots || []);
+          }
+          break;
+        case 'TEXT':
+          if (entity.insertionPoint && entity.text) {
+            obj = new TextObject(
+              0,
+              entity.insertionPoint.x || 0,
+              entity.insertionPoint.y || 0,
+              entity.text,
+              'Standard'
+            );
+            obj.height = entity.textHeight || 24;
+            obj.angle = entity.rotation || 0;
+          }
+          break;
+        case 'INSERT':
+          if (entity.insertionPoint && entity.name) {
+            const pos = { x: entity.insertionPoint.x || 0, y: entity.insertionPoint.y || 0 };
+            obj = new InsertObject(
+              0,
+              entity.name,
+              pos
+            );
+            obj.insertScale = { x: entity.scaleX || 1, y: entity.scaleY || 1 };
+            obj.rotation = entity.rotation || 0;
+          }
+          break;
+      }
+    } catch (error) {
+      console.warn(`Failed to create object for entity type ${entity.type}:`, error);
+      return null;
     }
 
     if (obj) {

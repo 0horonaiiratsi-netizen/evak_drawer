@@ -36,10 +36,10 @@ export class StlExportService {
     if (mesh && mesh.geometry) {
       // Спрощена тріангуляція з THREE.js геометрії
       const geometry = mesh.geometry;
-      const positions = geometry.attributes.position.array;
-      const indices = geometry.index ? geometry.index.array : null;
+      const positions = geometry.attributes?.position?.array;
+      const indices = geometry.index?.array;
 
-      if (indices) {
+      if (positions && indices) {
         for (let i = 0; i < indices.length; i += 3) {
           const i1 = indices[i] * 3;
           const i2 = indices[i + 1] * 3;
@@ -64,10 +64,10 @@ export class StlExportService {
     if (mesh && mesh.geometry) {
       // Спрощена тріангуляція з THREE.js геометрії
       const geometry = mesh.geometry;
-      const positions = geometry.attributes.position.array;
-      const indices = geometry.index ? geometry.index.array : null;
+      const positions = geometry.attributes?.position?.array;
+      const indices = geometry.index?.array;
 
-      if (indices) {
+      if (positions && indices) {
         for (let i = 0; i < indices.length; i += 3) {
           const i1 = indices[i] * 3;
           const i2 = indices[i + 1] * 3;

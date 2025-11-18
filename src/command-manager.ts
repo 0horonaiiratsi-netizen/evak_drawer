@@ -141,6 +141,18 @@ export class CommandManager {
                     command = new ThreeDChamferCommand(this.app);
                     break;
                 }
+                case 'ROTATE':
+                case 'RO': {
+                    const { RotateCommand } = await import('./commands/rotate-command');
+                    command = new RotateCommand(this.app);
+                    break;
+                }
+                case 'SCALE':
+                case 'SC': {
+                    const { ScaleCommand } = await import('./commands/scale-command');
+                    command = new ScaleCommand(this.app);
+                    break;
+                }
             }
 
             if (command) {

@@ -92,6 +92,8 @@ export class CircleObject implements SceneObject {
         quadrantPoints.forEach((p, i) => {
             grips.push({ object: this, type: GripType.STRETCH, point: p, metadata: { pointIndex: i } });
         });
+        grips.push({ object: this, type: GripType.ROTATE, point: { x: this.center.x, y: this.center.y - this.radius - 10 }, metadata: { center: this.center, isReference: true } });
+        grips.push({ object: this, type: GripType.SCALE, point: { x: this.center.x + this.radius + 10, y: this.center.y }, metadata: { center: this.center, isReference: true } });
         return grips;
     }
 

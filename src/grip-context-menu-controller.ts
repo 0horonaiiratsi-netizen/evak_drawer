@@ -27,7 +27,7 @@ export class GripContextMenuController {
     
     private createButtons(): void {
         this.element.innerHTML = ''; // Clear any existing static content
-        const actions: GripAction[] = ['STRETCH', 'MOVE', 'ROTATE', 'SCALE'];
+        const actions: GripAction[] = ['STRETCH', 'MOVE', 'ROTATE', 'SCALE', 'ROTATE_BY_REF', 'SCALE_BY_REF'];
         actions.forEach(action => {
             const button = document.createElement('button');
             button.setAttribute('role', 'menuitem');
@@ -58,6 +58,8 @@ export class GripContextMenuController {
         this.buttons.get('MOVE')!.textContent = this.i18n.t('gripContextMenu.move');
         this.buttons.get('ROTATE')!.textContent = this.i18n.t('gripContextMenu.rotate');
         this.buttons.get('SCALE')!.textContent = this.i18n.t('gripContextMenu.scale');
+        this.buttons.get('ROTATE_BY_REF')!.textContent = this.i18n.t('gripContextMenu.rotateByRef');
+        this.buttons.get('SCALE_BY_REF')!.textContent = this.i18n.t('gripContextMenu.scaleByRef');
     }
 
     public show(x: number, y: number, grip: Grip): void {

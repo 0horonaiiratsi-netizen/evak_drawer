@@ -204,6 +204,23 @@ export class SelectTool extends Tool {
         const availableActions = this.getAvailableActionsForGrip(grip);
         if (!availableActions.includes(action)) { return; }
 
+        // Handle reference-based actions by activating the corresponding tool
+        if (action === 'ROTATE_BY_REF') {
+            this.app.setActiveTool(ToolType.ROTATE_BY_REFERENCE);
+            const rotateTool = this.app.getTool(ToolType.ROTATE_BY_REFERENCE) as any;
+            if (rotateTool && typeof rotateTool.activateFromGrip === 'function') {
+                rotateTool.activateFromGrip(grip);
+            }
+            return;
+        } else if (action === 'SCALE_BY_REF') {
+            this.app.setActiveTool(ToolType.SCALE_BY_REFERENCE);
+            const scaleTool = this.app.getTool(ToolType.SCALE_BY_REFERENCE) as any;
+            if (scaleTool && typeof scaleTool.activateFromGrip === 'function') {
+                scaleTool.activateFromGrip(grip);
+            }
+            return;
+        }
+
         const initialStates = new Map<number, string>();
         // FIX: Use sceneService to access objects.
         const objectsSource = this.app.isSketchMode ? this.app.sketchContext : this.app.sceneService.objects;
@@ -272,18 +289,20 @@ export class SelectTool extends Tool {
             }
             return [];
         }
-        
+
         if (grip.object instanceof Wall && grip.metadata?.isCorner) {
             return ['MOVE'];
         }
-        
+
         switch (grip.type) {
             case GripType.STRETCH:
                 return ['STRETCH', 'MOVE', 'ROTATE', 'SCALE'];
             case GripType.MOVE:
                 return ['MOVE'];
             case GripType.ROTATE:
-                return ['ROTATE'];
+                return ['ROTATE', 'ROTATE_BY_REF'];
+            case GripType.SCALE:
+                return ['SCALE', 'SCALE_BY_REF'];
             default:
                 return [];
         }
@@ -300,6 +319,8 @@ export class SelectTool extends Tool {
                 case 'MOVE': statusMessage = 'ПЕРЕМІСТИТИ'; break;
                 case 'ROTATE': statusMessage = 'ОБЕРТАТИ'; break;
                 case 'SCALE': statusMessage = 'МАСШТАБУВАТИ'; break;
+                case 'ROTATE_BY_REF': statusMessage = 'ОБЕРТАТИ ПО РЕФЕРЕНЦУ'; break;
+                case 'SCALE_BY_REF': statusMessage = 'МАСШТАБУВАТИ ПО РЕФЕРЕНЦУ'; break;
                 default: statusMessage = this.state.currentAction;
             }
             this.app.commandLineController.setPrompt(`** ${statusMessage} **`);
