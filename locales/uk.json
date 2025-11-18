@@ -152,6 +152,8 @@
   "gripContextMenu.rotate": "Обертати",
   "gripContextMenu.scale": "Масштабувати",
   "gripContextMenu.stretch": "Розтягнути",
+  "gripContextMenu.rotateByRef": "Обертати за референсом",
+  "gripContextMenu.scaleByRef": "Масштабувати за референсом",
   "dialog.error": "Помилка",
   "dialog.cantAddToLockedLayer": "Неможливо додати об'єкт на заблокований шар.",
   "dialog.cantDeleteLastLayer": "Неможливо видалити останній шар.",

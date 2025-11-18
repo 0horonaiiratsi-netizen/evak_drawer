@@ -303,6 +303,10 @@ export class SelectTool extends Tool {
                 return ['ROTATE', 'ROTATE_BY_REF'];
             case GripType.SCALE:
                 return ['SCALE', 'SCALE_BY_REF'];
+            case GripType.ROTATE_BY_REF:
+                return ['ROTATE_BY_REF'];
+            case GripType.SCALE_BY_REF:
+                return ['SCALE_BY_REF'];
             default:
                 return [];
         }

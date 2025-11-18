@@ -54,10 +54,6 @@
     - **Залежності:** src/services/stl-export-service.ts (новий), stl-writer (npm).
     - **Кроки:** Тріангуляція 3D-геометрії; експорт у ASCII/Binary STL.
     - **Тестування:** Unit-тести (src/tests/stl-export.test.ts); перевірка в slicer'ах (Cura).
-  - [ ] **Імпорт/Експорт STEP/IGES:** Підтримка для обміну 3D-моделями.
-    - **Залежності:** Open CASCADE (для STEP/IGES), src/services/step-import-export-service.ts (новий).
-    - **Кроки:** Інтегрувати Open CASCADE для парсингу/експорту; створити SceneObject з STEP.
-    - **Тестування:** Unit-тести (src/tests/step-import.test.ts); сумісність з SolidWorks.
 - [x] **Документація файлів:** Оновити README.md з прикладами імпорту/експорту; додати валідацію форматів.
   - **Залежності:** README.md, src/services/file-validation-service.ts (новий).
   - **Кроки:** Додати приклади команд (імпорт DXF: "File > Import > DXF"); валідація (перевірка версії/структури).
@@ -79,10 +75,7 @@
     - **Залежності:** src/services/stl-export-service.ts, stl-writer (npm).
     - **Кроки:** Тріангуляція 3D-геометрії; експорт у ASCII/Binary STL.
     - **Тестування:** Unit-тести (src/tests/stl-export.test.ts); перевірка в slicer'ах (Cura).
-  - [ ] **Імпорт/Експорт STEP/IGES:** Підтримка для обміну 3D-моделями (плейсхолдер з базовою валідацією).
-    - **Залежності:** Open CASCADE (для STEP/IGES), src/services/step-import-export-service.ts.
-    - **Кроки:** Інтегрувати Open CASCADE для парсингу/експорту; створити SceneObject з STEP.
-    - **Тестування:** Unit-тести (src/tests/step-import.test.ts); сумісність з SolidWorks.
+
 - [x] **Документація файлів:** Оновити README.md з прикладами імпорту/експорту; додати валідацію форматів.
   - **Залежності:** README.md, src/services/file-validation-service.ts.
   - **Кроки:** Додати приклади команд (імпорт DXF: "File > Import > DXF"); валідація (перевірка версії/структури).
@@ -102,11 +95,11 @@
 - [x] **Mirror:** Афінне віддзеркалення.
 - [x] **Fillet/Chamfer:** Перетин + створення Arc/Polyline; UI для радіуса.
 - [x] **Match Properties:** Копіювання властивостей (шар, колір, товщина).
-- [ ] **Додаткові інструменти:** Rotate by Reference, Scale by Reference; інтеграція з grips.ts.
-  - **Залежності:** src/tools/rotate-tool.ts (новий), src/tools/scale-tool.ts (новий), src/scene/grips.ts (інтеграція).
-  - **Кроки:** Створити RotateTool (вибір осі/кута за reference); ScaleTool (масштаб за reference-точкою); додати grips для preview/введення.
+- [x] **Додаткові інструменти:** Rotate by Reference, Scale by Reference; інтеграція з grips.ts.
+  - **Залежності:** src/tools/rotate-by-reference-tool.ts, src/tools/scale-by-reference-tool.ts, src/scene/grips.ts (інтеграція).
+  - **Кроки:** Створити RotateByReferenceTool (вибір осі/кута за reference); ScaleByReferenceTool (масштаб за reference-точкою); додати grips для preview/введення.
   - **Тестування:** Unit-тести (src/tests/rotate-scale.test.ts); перевірка геометрії після трансформації.
-- [ ] **Тестування:** Unit-тести для JSTS-операцій (src/tests/geometry-service.test.ts); UI-тести для preview.
+- [x] **Тестування:** Unit-тести для JSTS-операцій (src/tests/geometry-service.test.ts); UI-тести для preview.
   - **Залежності:** Vitest/Jest, src/services/geometry-service.ts (JSTS wrapper).
   - **Кроки:** Тестувати перетини/буфери (intersection/buffer); UI-preview (canvas рендеринг під час команди).
   - **Тестування:** Coverage >80%; e2e для інструментів (Playwright).

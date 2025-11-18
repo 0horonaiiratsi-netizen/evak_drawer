@@ -7,7 +7,7 @@ import { describe, it, expect } from 'vitest';
 import { DxfImportService } from '../services/dxf-import-service';
 import { DxfExportService } from '../services/dxf-export-service';
 import { StlExportService } from '../services/stl-export-service';
-import { StepImportExportService } from '../services/step-import-export-service';
+
 import { PolylineObject } from '../scene/polyline-object';
 import { CircleObject } from '../scene/circle-object';
 import { ExtrudeObject } from '../scene/extrude-object';
@@ -167,38 +167,7 @@ EOF`;
         });
     });
 
-    describe('STEP Import/Export Service', () => {
-        it('should return empty array for STEP import with valid header', async () => {
-            const stepContent = `ISO-10303-21;
-HEADER;
-FILE_DESCRIPTION(('STEP AP214'),'2;1');
-ENDSEC;
-DATA;
-ENDSEC;
-END-ISO-10303-21;`;
-            const objects = await StepImportExportService.importStep(stepContent);
-            expect(objects).toEqual([]);
-        });
 
-        it('should throw error for invalid STEP content', async () => {
-            await expect(StepImportExportService.importStep('invalid')).rejects.toThrow('Невірний формат STEP файлу');
-        });
-
-        it('should return empty string for STEP export', () => {
-            const stepContent = StepImportExportService.exportStep([]);
-            expect(stepContent).toBe('');
-        });
-
-        it('should return empty array for IGES import', async () => {
-            const objects = await StepImportExportService.importIges('dummy content');
-            expect(objects).toEqual([]);
-        });
-
-        it('should return empty string for IGES export', () => {
-            const igesContent = StepImportExportService.exportIges([]);
-            expect(igesContent).toBe('');
-        });
-    });
 
     describe('Integration Tests', () => {
         it('should round-trip DXF export/import for simple objects', async () => {

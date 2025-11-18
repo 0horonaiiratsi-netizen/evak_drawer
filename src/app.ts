@@ -80,6 +80,7 @@ import { TextStyle } from './styles/text-style';
 import { DxfImportService } from './services/dxf-import-service';
 import { DxfExportService } from './services/dxf-export-service';
 import { StlExportService } from './services/stl-export-service';
+import { FileValidationService } from './services/file-validation-service';
 
 declare const pdfjsLib: any;
 
@@ -676,24 +677,7 @@ export class App {
         }
     }
 
-    // Placeholder для STEP (повна реалізація потребує Open CASCADE)
-    exportAsSTEP(): void {
-        const objects = [...this.sceneService.objects];
-        const stepContent = StepImportExportService.exportStep(objects);
-        if (stepContent) {
-            this.exportWithSave(stepContent, 'export.step', 'STEP');
-        } else {
-            this.dialogController.alert(this.i18n.t('dialog.error'), 'STEP експорт не реалізований. Потребує Open CASCADE.');
-        }
-    }
 
-    async importSTEP(filePath: string): Promise<void> {
-        this.importWithValidation(
-            filePath,
-            FileValidationService.validateStep,
-            StepImportExportService.importStep
-        );
-    }
 
     public deleteTextStyle(name: string): void {
         if (this.styleManager.deleteTextStyle(name)) {

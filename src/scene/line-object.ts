@@ -83,6 +83,8 @@ export class LineObject implements SceneObject {
         grips.push({ object: this, type: GripType.STRETCH, point: this.end, metadata: { pointIndex: 1 } });
         grips.push({ object: this, type: GripType.ROTATE, point: { x: this.getCenter(app).x, y: this.getCenter(app).y - 20 }, metadata: { center: this.getCenter(app), isReference: true } });
         grips.push({ object: this, type: GripType.SCALE, point: { x: this.getCenter(app).x + 20, y: this.getCenter(app).y }, metadata: { center: this.getCenter(app), isReference: true } });
+        grips.push({ object: this, type: GripType.ROTATE_BY_REF, point: { x: this.getCenter(app).x, y: this.getCenter(app).y - 30 }, metadata: { center: this.getCenter(app), isReference: true } });
+        grips.push({ object: this, type: GripType.SCALE_BY_REF, point: { x: this.getCenter(app).x + 30, y: this.getCenter(app).y }, metadata: { center: this.getCenter(app), isReference: true } });
         return grips;
     }
 

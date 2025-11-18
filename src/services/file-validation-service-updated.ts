@@ -69,10 +69,11 @@ export class FileValidationService {
   }
 
 
+
   /**
    * Валідація DWG файлу
    */
-  static validateDwg(content: string): { isValid: boolean; errors: string[]; version?: string } {
+  static async validateDwg(content: string): Promise<{ isValid: boolean; errors: string[]; version?: string }> {
     const errors: string[] = [];
 
     if (!content || content.length === 0) {
@@ -87,7 +88,7 @@ export class FileValidationService {
     }
 
     // Перевірка версії через DwgService
-    const { DwgService } = require('./dwg-service');
+    const { DwgService } = await import('./dwg-service');
     const versionCheck = DwgService.validateDwgVersion(content);
     if (!versionCheck.isValid) {
       errors.push(...versionCheck.errors);
@@ -141,7 +142,7 @@ export class FileValidationService {
   /**
    * Загальна валідація файлу за розширенням
    */
-  static validateFile(fileName: string, content: string): { isValid: boolean; errors: string[] } {
+  static async validateFile(fileName: string, content: string): Promise<{ isValid: boolean; errors: string[] }> {
     const extension = fileName.toLowerCase().split('.').pop();
 
     switch (extension) {
@@ -151,7 +152,7 @@ export class FileValidationService {
         return this.validateStl(content);
 
       case 'dwg':
-        return this.validateDwg(content);
+        return await this.validateDwg(content);
       case 'json':
         return this.validateJson(content);
       default:

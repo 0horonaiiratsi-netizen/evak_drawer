@@ -28,6 +28,7 @@ import { RevolveObject } from "./revolve-object";
 import { CutObject } from "./cut-object";
 import { SweepObject } from "./sweep-object";
 import { LoftObject } from "./loft-object";
+import { AssemblyObject } from "./assembly-object";
 
 // A map to connect type strings to their respective factory methods for deserialization
 export const objectFactory: { [key: string]: (data: any, app: App) => SceneObject } = {
@@ -54,4 +55,5 @@ export const objectFactory: { [key: string]: (data: any, app: App) => SceneObjec
     'cutObject': (data, app) => CutObject.fromJSON(data, app),
     'sweepObject': (data, app) => SweepObject.fromJSON(data, app),
     'loftObject': (data, app) => LoftObject.fromJSON(data, app),
+    'assembly': (data, app) => AssemblyObject.fromJSON(data, app),
 };

@@ -7,10 +7,12 @@ import { Point } from "./scene/point";
 import { SceneObject } from "./scene/scene-object";
 
 export enum GripType {
-    MOVE,       // Square, moves the whole object
-    STRETCH,    // Triangle, modifies a vertex/point or scales
-    ROTATE,     // Circle, rotates the object
-    SCALE       // Square, scales the object by reference
+    MOVE,           // Square, moves the whole object
+    STRETCH,        // Triangle, modifies a vertex/point or scales
+    ROTATE,         // Circle, rotates the object
+    SCALE,          // Square, scales the object by reference
+    ROTATE_BY_REF,  // Circle, rotates the object by visual reference
+    SCALE_BY_REF    // Square, scales the object by visual reference
 }
 
 // Defines a command that can be initiated from a grip's context menu
